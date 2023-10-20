@@ -19,6 +19,7 @@ public class ParallelizationModule extends AbstractModule {
 		bind(WorkerSubscriptionService.class).in(Singleton.class);
 		bind(MessageSenderService.class).in(Singleton.class);
 		bind(MessageReceiverService.class).in(Singleton.class);
+		bind(MessageSenderServerService.class).in(Singleton.class);
 		bind(WorkerRepository.class).in(Singleton.class);
 		bind(ConnectionInitializationService.class).in(Singleton.class);
 		bind(MessagePropagationService.class).to(SubscriptionServiceImpl.class).in(Singleton.class);

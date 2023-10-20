@@ -68,9 +68,9 @@ public class WorkerStrategyService implements Strategy, Runnable, Subscriber {
 	@Override
 	public void notify(Message message) {
 		switch (message.getMessageType()) {
-			case RunSimulationMessage -> runSimulation();
 			case ServerInitializationMessage -> handleInitializationMessage(
 				(communication.model.messages.ServerInitializationMessage) message);
+			case RunSimulationMessage -> runSimulation();
 			case ShutDownMessage -> shutDown();
 			case StopSimulationMessage -> stopSimulation();
 			case ResumeSimulationMessage -> resumeSimulation();
