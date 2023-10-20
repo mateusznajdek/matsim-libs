@@ -44,6 +44,9 @@ import org.matsim.core.mobsim.framework.MobsimTimer;
 import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.framework.listeners.MobsimListener;
 import org.matsim.core.mobsim.qsim.changeeventsengine.NetworkChangeEventsEngineI;
+import org.matsim.core.mobsim.qsim.communication.service.server.SubscriptionService;
+import org.matsim.core.mobsim.qsim.communication.service.worker.WorkerSubscriptionService;
+import org.matsim.core.mobsim.qsim.communication.startingup.StrategySelectionService;
 import org.matsim.core.mobsim.qsim.interfaces.AgentCounter;
 import org.matsim.core.mobsim.qsim.interfaces.*;
 import org.matsim.core.mobsim.qsim.qnetsimengine.NetsimEngine;
@@ -98,6 +101,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 
 	final private static Logger log = LogManager.getLogger(QSim.class);
+	private final StrategySelectionService strategySelectionService;
 
 	/**
 	 * time since last "info"
@@ -136,6 +140,7 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 	private long qSimInternalTime = 0;
 	private final Map<MobsimEngine, AtomicLong> mobsimEngineRunTimes;
 	private ActivityEngine activityEngine;
+	private WorkerSubscriptionService subscriptionService;
 
 	{
 		if (analyzeRunTimes) this.mobsimEngineRunTimes = new HashMap<>();
@@ -211,7 +216,11 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 	 *
 	 */
 	@Inject
-	private QSim( final Scenario sc, EventsManager events, Injector childInjector ) {
+	private QSim(final Scenario sc,
+				 EventsManager events,
+				 Injector childInjector,
+				 StrategySelectionService strategySelectionService
+				 ) {
 		this.scenario = sc;
 		if ( sc.getConfig().qsim().getNumberOfThreads() > 1) {
 			this.events = EventsUtils.getParallelFeedableInstance( events );
@@ -223,6 +232,8 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 		this.simTimer = new MobsimTimer( sc.getConfig().qsim().getTimeStepSize());
 
 		this.childInjector = childInjector ;
+
+		this.strategySelectionService = strategySelectionService;
 //		this.qVehicleFactory = qVehicleFactory;
 	}
 
@@ -289,6 +300,9 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 	 * Prepare the simulation and get all the settings from the configuration.
 	 */
 	/*package*/ void prepareSim() {
+		// setup for parallelization module - select starting mode of app
+		this.strategySelectionService.selectModeAndStartSimulation();
+
 		events.initProcessing();
 
 		createAgents();
@@ -409,6 +423,7 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 			if (mobsimEngine == this.withindayEngine) continue;
 
 			mobsimEngine.doSimStep(now);
+
 
 			if (analyzeRunTimes)
 				this.mobsimEngineRunTimes.get(mobsimEngine).addAndGet(System.nanoTime() - this.startClockTime);
