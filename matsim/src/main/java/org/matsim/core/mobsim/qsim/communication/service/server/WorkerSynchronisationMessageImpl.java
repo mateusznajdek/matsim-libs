@@ -1,30 +1,30 @@
 package org.matsim.core.mobsim.qsim.communication.service.server;
 
 import com.google.inject.Inject;
-import org.matsim.core.mobsim.qsim.communication.Configuration;
-import org.matsim.core.mobsim.qsim.communication.model.MessagesTypeEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.matsim.core.config.groups.ParallelizationConfigGroup;
+import org.matsim.core.mobsim.qsim.communication.model.MessagesTypeEnum;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class WorkerSynchronisationMessageImpl implements WorkerSynchronisationService{
+public class WorkerSynchronisationMessageImpl implements WorkerSynchronisationService {
 	private final static Logger LOG = LogManager.getLogger(WorkerSynchronisationMessageImpl.class);
 
 	private final Map<MessagesTypeEnum, Set<String>> messageTypeWorkerRepository = new HashMap<>();
-	private final Configuration configuration;
+	private final ParallelizationConfigGroup configuration;
 
 	@Inject
-	public WorkerSynchronisationMessageImpl(Configuration configuration) {
+	public WorkerSynchronisationMessageImpl(ParallelizationConfigGroup configuration) {
 		this.configuration = configuration;
 	}
 
 	@Override
 	public synchronized void waitForAllWorkers(MessagesTypeEnum state) {
-		while(messageTypeWorkerRepository.get(state) == null || messageTypeWorkerRepository.get(state).size() < configuration.getWorkerCount()){
+		while (messageTypeWorkerRepository.get(state) == null || messageTypeWorkerRepository.get(state).size() < configuration.getWorkerCount()) {
 			try {
 				wait();
 			} catch (InterruptedException e) {

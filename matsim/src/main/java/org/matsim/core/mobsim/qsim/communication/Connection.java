@@ -17,10 +17,10 @@ public class Connection {
 	private final static Logger LOG = LogManager.getLogger(Connection.class);
 
 	private DataOutputStream output;
-	private final WorkerId id;
+	private final WorkerId targetWorkerId;
 
 	public Connection(ConnectionDto message) {
-		id = new WorkerId(message.getId());
+		targetWorkerId = new WorkerId(message.getId());
 		for (int i = 0; i < 10; i++) {
 			try {
 				Socket socket = new Socket(message.getAddress(), message.getPort());
@@ -40,7 +40,7 @@ public class Connection {
 
 	public synchronized void send(Message message) throws IOException {
 		if (Objects.isNull(output)) {
-			LOG.info("Connection with worker " + id + " not exist");
+			LOG.info("Connection with worker " + targetWorkerId + " not exist");
 			return;
 		}
 		byte[] bytes = SerializationUtils.serialize(message);

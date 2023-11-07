@@ -35,28 +35,7 @@ import org.matsim.core.config.consistency.BeanValidationConfigConsistencyChecker
 import org.matsim.core.config.consistency.ConfigConsistencyChecker;
 import org.matsim.core.config.consistency.UnmaterializedConfigGroupChecker;
 import org.matsim.core.config.consistency.VspConfigConsistencyCheckerImpl;
-import org.matsim.core.config.groups.ChangeLegModeConfigGroup;
-import org.matsim.core.config.groups.ChangeModeConfigGroup;
-import org.matsim.core.config.groups.ControlerConfigGroup;
-import org.matsim.core.config.groups.CountsConfigGroup;
-import org.matsim.core.config.groups.FacilitiesConfigGroup;
-import org.matsim.core.config.groups.GlobalConfigGroup;
-import org.matsim.core.config.groups.HouseholdsConfigGroup;
-import org.matsim.core.config.groups.LinkStatsConfigGroup;
-import org.matsim.core.config.groups.NetworkConfigGroup;
-import org.matsim.core.config.groups.ParallelEventHandlingConfigGroup;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
-import org.matsim.core.config.groups.PlansCalcRouteConfigGroup;
-import org.matsim.core.config.groups.PlansConfigGroup;
-import org.matsim.core.config.groups.PtCountsConfigGroup;
-import org.matsim.core.config.groups.QSimConfigGroup;
-import org.matsim.core.config.groups.ScenarioConfigGroup;
-import org.matsim.core.config.groups.StrategyConfigGroup;
-import org.matsim.core.config.groups.SubtourModeChoiceConfigGroup;
-import org.matsim.core.config.groups.TimeAllocationMutatorConfigGroup;
-import org.matsim.core.config.groups.TravelTimeCalculatorConfigGroup;
-import org.matsim.core.config.groups.VehiclesConfigGroup;
-import org.matsim.core.config.groups.VspExperimentalConfigGroup;
+import org.matsim.core.config.groups.*;
 import org.matsim.core.mobsim.hermes.HermesConfigGroup;
 import org.matsim.core.mobsim.jdeqsim.JDEQSimConfigGroup;
 import org.matsim.core.replanning.annealing.ReplanningAnnealerConfigGroup;
@@ -67,7 +46,7 @@ import org.matsim.run.CreateFullConfig;
 /**
  * Stores all configuration settings specified in a configuration file and
  * provides access to the settings at runtime.
- * 
+ *
  * @see CreateFullConfig
  *
  * @author mrieser
@@ -143,12 +122,14 @@ public final class Config implements MatsimExtensionPoint {
 
 		this.modules.put(ScenarioConfigGroup.GROUP_NAME, new ScenarioConfigGroup());
 
+		this.modules.put(ParallelizationConfigGroup.GROUP_NAME, new ParallelizationConfigGroup());
+
 		this.modules.put(PlansCalcRouteConfigGroup.GROUP_NAME, new PlansCalcRouteConfigGroup());
 
 		this.modules.put(TimeAllocationMutatorConfigGroup.GROUP_NAME, new TimeAllocationMutatorConfigGroup());
 
 		this.modules.put(VspExperimentalConfigGroup.GROUP_NAME, new VspExperimentalConfigGroup());
-		
+
 		this.modules.put(PtCountsConfigGroup.GROUP_NAME, new PtCountsConfigGroup());
 
 		this.modules.put(TransitConfigGroup.GROUP_NAME, new TransitConfigGroup());
@@ -156,9 +137,9 @@ public final class Config implements MatsimExtensionPoint {
 		this.modules.put(LinkStatsConfigGroup.GROUP_NAME, new LinkStatsConfigGroup());
 
 		this.modules.put(TransitRouterConfigGroup.GROUP_NAME, new TransitRouterConfigGroup());
-		
+
 		this.modules.put( SubtourModeChoiceConfigGroup.GROUP_NAME , new SubtourModeChoiceConfigGroup() );
-		
+
 		this.modules.put( VehiclesConfigGroup.GROUP_NAME , new VehiclesConfigGroup() ) ;
 
 		this.modules.put(ChangeModeConfigGroup.CONFIG_MODULE, new ChangeModeConfigGroup());
@@ -440,6 +421,10 @@ public final class Config implements MatsimExtensionPoint {
 		return (ScenarioConfigGroup) this.getModule(ScenarioConfigGroup.GROUP_NAME);
 	}
 
+	public ParallelizationConfigGroup parallelization() {
+		return (ParallelizationConfigGroup) this.getModule(ParallelizationConfigGroup.GROUP_NAME);
+	}
+
 	public PlansCalcRouteConfigGroup plansCalcRoute() {
 		return (PlansCalcRouteConfigGroup) this.getModule(PlansCalcRouteConfigGroup.GROUP_NAME);
 	}
@@ -545,7 +530,7 @@ public final class Config implements MatsimExtensionPoint {
 	public final VehiclesConfigGroup vehicles() {
 		return (VehiclesConfigGroup) this.getModule(VehiclesConfigGroup.GROUP_NAME);
 	}
-	
+
 	public void setContext(URL context) {
 		if ( this.context==null  ||  !(context.toString().equals( this.context.toString() ) ) ) {
 			log.info("setting context to [" + context + "]");

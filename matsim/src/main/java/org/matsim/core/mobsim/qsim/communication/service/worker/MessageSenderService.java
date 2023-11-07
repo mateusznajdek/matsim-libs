@@ -2,20 +2,22 @@ package org.matsim.core.mobsim.qsim.communication.service.worker;
 
 
 import com.google.inject.Inject;
-import org.matsim.core.mobsim.qsim.communication.Configuration;
+import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.matsim.core.config.groups.ParallelizationConfigGroup;
 import org.matsim.core.mobsim.qsim.communication.Connection;
 import org.matsim.core.mobsim.qsim.communication.Subscriber;
-import org.matsim.core.mobsim.qsim.communication.model.WorkerId;
 import org.matsim.core.mobsim.qsim.communication.model.MessagesTypeEnum;
+import org.matsim.core.mobsim.qsim.communication.model.WorkerId;
 import org.matsim.core.mobsim.qsim.communication.model.messages.Message;
 import org.matsim.core.mobsim.qsim.communication.model.messages.ServerInitializationMessage;
 import org.matsim.core.mobsim.qsim.communication.model.serializable.ConnectionDto;
 import org.matsim.core.mobsim.qsim.communication.model.serializable.WorkerDataDto;
-import lombok.Getter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,33 +25,49 @@ public class MessageSenderService implements Subscriber {
 	private final static Logger LOG = LogManager.getLogger(MessageSenderService.class);
 
 	private final Map<WorkerId, Connection> neighbourRepository = new HashMap<>();
+	private final Map<WorkerId, Connection> connectionMap = new HashMap<>();
 	@Getter
 	private final Map<WorkerId, ConnectionDto> connectionDtoMap = new HashMap<>();
-	private final Configuration configuration;
+	private final ParallelizationConfigGroup configuration;
+	private final NeighbourManager neighbourManager;
 	private Connection serverConnection;
 	private final WorkerSubscriptionService subscriptionService;
 
 	@Inject
 	public MessageSenderService(WorkerSubscriptionService subscriptionService,
-								Configuration configuration) {
+								ParallelizationConfigGroup configuration,
+								NeighbourManager neighbourManager) {
 		this.subscriptionService = subscriptionService;
 		this.configuration = configuration;
+		this.neighbourManager = neighbourManager;
 		init();
 	}
 
 	//	@PostConstruct
 	void init() {
 		subscriptionService.subscribe(this, MessagesTypeEnum.ServerInitializationMessage);
+		neighbourManager.getMyNeighboursIds()
+			.stream()
+			.map(rawWorkerId -> new WorkerId(String.valueOf(rawWorkerId)))
+			.filter(connectionMap::containsKey)
+			.forEach(workerId -> neighbourRepository.put(workerId, connectionMap.get(workerId)));
+
+		// vs
+
+//		connectionMap.forEach((workerId, connection) -> {
+//			if (neighbourManager.getMyNeighboursIds().contains(Integer.valueOf(workerId.getId())))
+//				neighbourRepository.put(workerId, connectionMap.get(workerId));
+//		});
 	}
 
 	/**
 	 * @param workerId - unique worker id
-	 * @param message       - message to send
+	 * @param message  - message to send
 	 * @throws IOException <p>Method send message to specific client</p>
 	 */
 	public void send(WorkerId workerId, Message message) throws IOException {
 		LOG.debug("Worker send message to: " + workerId + " message type: " + message.getMessageType());
-		neighbourRepository.get(workerId).send(message);
+		connectionMap.get(workerId).send(message);
 	}
 
 	public void sendServerMessage(Message message) throws IOException {
@@ -78,9 +96,32 @@ public class MessageSenderService implements Subscriber {
 	 *                <p>Method send message to all existing worker</p>
 	 */
 	public void broadcast(Message message) {
-		neighbourRepository.values().forEach(n -> {
+		connectionMap.forEach((workerId, connection) -> {
 			try {
-				n.send(message);
+				// TODO remove it, just for tests
+//				int sleepTimeMs = new Random().nextInt(100, 3000);
+//				LOG.info("Going to sleep for " + sleepTimeMs + "ms");
+//				try {
+//					Thread.sleep(sleepTimeMs);
+//				} catch (InterruptedException e) {
+//					throw new RuntimeException(e);
+//				}
+//				LOG.info("Sending sync message to " + workerId);
+				connection.send(message);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	// TODO think if implement it this way!
+	public void sendToNeighbours(Message message) {
+		neighbourRepository.forEach((workerId, connection) -> {
+			try {
+				connection.send(message);
+			} catch (SocketException e) {
+				System.out.println("dupa :(");
+				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -92,7 +133,6 @@ public class MessageSenderService implements Subscriber {
 		switch (message.getMessageType()) {
 			case ServerInitializationMessage -> handleWorkerConnectionMessage(message);
 		}
-
 	}
 
 	private void handleWorkerConnectionMessage(Message message) {
@@ -103,7 +143,7 @@ public class MessageSenderService implements Subscriber {
 			.forEach(c -> {
 				Connection connection = new Connection(c);
 				connectionDtoMap.put(new WorkerId(c.getId()), c);
-				neighbourRepository.put(new WorkerId(c.getId()), connection);
+				connectionMap.put(new WorkerId(c.getId()), connection);
 			});
 	}
 }

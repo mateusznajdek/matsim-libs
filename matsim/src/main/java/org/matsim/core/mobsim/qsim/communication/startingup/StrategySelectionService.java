@@ -1,7 +1,8 @@
 package org.matsim.core.mobsim.qsim.communication.startingup;
 
 import com.google.inject.Inject;
-import org.matsim.core.mobsim.qsim.communication.Configuration;
+import org.matsim.core.config.groups.ParallelizationConfigGroup;
+import org.matsim.core.mobsim.qsim.QSim;
 
 import javax.annotation.PreDestroy;
 import java.io.File;
@@ -14,18 +15,18 @@ public class StrategySelectionService {
 	private final WorkerStrategyService workerStrategyService;
 	private final ServerStrategyService serverStrategyService;
 
-	private final Configuration configuration;
+	private final ParallelizationConfigGroup configuration;
 
 	@Inject
 	public StrategySelectionService(WorkerStrategyService workerStrategyService,
 									ServerStrategyService serverStrategyService,
-									Configuration configuration) {
+									ParallelizationConfigGroup configuration) {
 		this.workerStrategyService = workerStrategyService;
 		this.serverStrategyService = serverStrategyService;
 		this.configuration = configuration;
 	}
 
-	public void selectModeAndStartSimulation() {
+	public void selectModeAndStartSimulation(QSim qsim) {
 		init();
 
 		try {
@@ -33,9 +34,9 @@ public class StrategySelectionService {
 //				singleWorkStrategyService.executeStrategy();
 //			} else
 			if (canWorkAsServer() && !isServerRunning()) {
-				serverStrategyService.executeStrategy();
+				serverStrategyService.executeStrategy(qsim);
 			} else {
-				workerStrategyService.executeStrategy();
+				workerStrategyService.executeStrategy(qsim);
 			}
 		} catch (InterruptedException | IOException e) {
 			e.printStackTrace();
@@ -65,7 +66,7 @@ public class StrategySelectionService {
 
 	@PreDestroy
 	public void onExit() {
-		if (configuration.isServerOnThisMachine()) {
+		if (configuration.getServerOnThisMachine()) {
 			File serverLock = new File(SERVER_LOCK);
 			serverLock.deleteOnExit();
 		}

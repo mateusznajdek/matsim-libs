@@ -24,11 +24,6 @@ public class Configuration {
 	private int workerCount;
 
 	/**
-	 * How long simulation should work
-	 */
-	private int simulationStep;
-
-	/**
 	 * Unique worker id
 	 */
 	private WorkerId workerId;
@@ -45,7 +40,6 @@ public class Configuration {
 			.serverIp("127.0.0.1")
 			.serverPort(8081)
 			.workerCount(4)
-			.simulationStep(10)
 			.serverOnThisMachine(false)
 			.build();
 	}

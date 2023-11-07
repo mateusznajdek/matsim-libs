@@ -27,5 +27,5 @@ public enum MessagesTypeEnum {
 	 */
 	FinishSimulationMessage,
 	ShutDownMessage,
-	CarTransferMessage,
+	SyncStepMessage,
 }

@@ -49,14 +49,14 @@ import org.xml.sax.SAXException;
  * @author dgrether
  */
 public final class LanesReader implements MatsimReader {
-	
+
 	private static final Logger log = LogManager.getLogger(LanesReader.class);
-	
+
 	@Deprecated
 	public static final String SCHEMALOCATIONV11 = "http://www.matsim.org/files/dtd/laneDefinitions_v1.1.xsd";
 
 	public static final String SCHEMALOCATIONV20 = "http://www.matsim.org/files/dtd/laneDefinitions_v2.0.xsd";
-	
+
 	private Lanes lanes;
 	private LanesFactory factory;
 
@@ -88,7 +88,7 @@ public final class LanesReader implements MatsimReader {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private void parse(InputStream stream) throws JAXBException, SAXException {
 		ObjectFactory fac = new ObjectFactory();
 		JAXBContext jc = JAXBContext.newInstance(org.matsim.jaxb.lanedefinitions20.ObjectFactory.class);
@@ -160,6 +160,7 @@ public final class LanesReader implements MatsimReader {
 				l2lAssignment.addLane(lane);
 			}
 			this.lanes.addLanesToLinkAssignment(l2lAssignment);
+			this.lanes.toString();
 		}
 	}
 }

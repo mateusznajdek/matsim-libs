@@ -24,13 +24,13 @@ import org.matsim.core.gbl.Gbl;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 
-final class VehicleImpl implements Vehicle {
+public final class VehicleImpl implements Vehicle {
 
     private VehicleType type;
     private Id<Vehicle> id;
     private Attributes attributes;
 
-    VehicleImpl(Id<Vehicle> id, VehicleType type) {
+    public VehicleImpl(Id<Vehicle> id, VehicleType type) {
         Gbl.assertNotNull(id);
         Gbl.assertNotNull(type);
         this.id = id;

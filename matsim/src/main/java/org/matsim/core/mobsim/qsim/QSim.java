@@ -44,12 +44,15 @@ import org.matsim.core.mobsim.framework.MobsimTimer;
 import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.framework.listeners.MobsimListener;
 import org.matsim.core.mobsim.qsim.changeeventsengine.NetworkChangeEventsEngineI;
-import org.matsim.core.mobsim.qsim.communication.service.server.SubscriptionService;
+import org.matsim.core.mobsim.qsim.communication.model.messages.FinishSimulationMessage;
 import org.matsim.core.mobsim.qsim.communication.service.worker.WorkerSubscriptionService;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 import org.matsim.core.mobsim.qsim.communication.startingup.StrategySelectionService;
+import org.matsim.core.mobsim.qsim.communication.startingup.WorkerStrategyService;
 import org.matsim.core.mobsim.qsim.interfaces.AgentCounter;
 import org.matsim.core.mobsim.qsim.interfaces.*;
 import org.matsim.core.mobsim.qsim.qnetsimengine.NetsimEngine;
+import org.matsim.core.mobsim.qsim.qnetsimengine.QLinkImpl;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngineI;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.population.PopulationUtils;
@@ -127,6 +130,8 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 	private double stopTime; // initialised in initSimTimer()
 	private final MobsimListenerManager listenerManager;
 	private final Scenario scenario;
+	private final WorkerStrategyService workerStrategyService;
+	private final StepSynchronizationService stepSynchronizationService;
 	private final List<ActivityHandler> activityHandlers = new ArrayList<>();
 	private final List<DepartureHandler> departureHandlers = new ArrayList<>();
 	private final org.matsim.core.mobsim.qsim.AgentCounter agentCounter;
@@ -219,9 +224,12 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 	private QSim(final Scenario sc,
 				 EventsManager events,
 				 Injector childInjector,
-				 StrategySelectionService strategySelectionService
+				 StrategySelectionService strategySelectionService,
+				 StepSynchronizationService stepSynchronizationService,
+				 WorkerStrategyService workerStrategyService
 				 ) {
 		this.scenario = sc;
+		this.workerStrategyService = workerStrategyService;
 		if ( sc.getConfig().qsim().getNumberOfThreads() > 1) {
 			this.events = EventsUtils.getParallelFeedableInstance( events );
 		} else {
@@ -234,6 +242,7 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 		this.childInjector = childInjector ;
 
 		this.strategySelectionService = strategySelectionService;
+		this.stepSynchronizationService = stepSynchronizationService;
 //		this.qVehicleFactory = qVehicleFactory;
 	}
 
@@ -264,9 +273,14 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 				arrangeNextAgentAction(agent);
 			}
 
+			int simStep = 0; // for debug
+
+			workerStrategyService.waitForSimToRun();
+
 			// do iterations
 			boolean doContinue = true;
 			while (doContinue) {
+				log.info("simStep: " + simStep++);
 				doContinue = doSimStep();
 			}
 		} catch (RuntimeException tryBlockException) {
@@ -277,6 +291,7 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 			// Without this finally, in case of a crash, threads are not closed, which lead to process hanging forever
 			// at least on the eth euler cluster (but not on our local machines at ivt!?) td oct 15
 			try {
+				stepSynchronizationService.sendFinishMessageToServer();
 				cleanupSim();
 			} catch (RuntimeException cleanupException) {
 				if (tryBlockWithException) {
@@ -301,7 +316,7 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 	 */
 	/*package*/ void prepareSim() {
 		// setup for parallelization module - select starting mode of app
-		this.strategySelectionService.selectModeAndStartSimulation();
+		this.strategySelectionService.selectModeAndStartSimulation(this);
 
 		events.initProcessing();
 
@@ -449,11 +464,18 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 
 		if (doContinue) {
 			this.simTimer.incrementTime();
+			stepSynchronizationService.sendSyncMessageToNeighbours();
+			stepSynchronizationService.getSyncMessages();
+
+			// TODO insert received vehicle
+//			var qlink = (QLinkImpl) this.netEngine.getNetsimNetwork().getNetsimLink(Id.createLinkId(""));
+//			qlink.addDepartingVehicle(null);// pass received vehicles
 		}
 
 		if (analyzeRunTimes) this.qSimInternalTime += System.nanoTime() - this.startClockTime;
 
 		return doContinue;
+
 	}
 
 	public void insertAgentIntoMobsim(final MobsimAgent agent) {

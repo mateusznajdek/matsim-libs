@@ -31,6 +31,8 @@ import java.util.concurrent.ThreadFactory;
 import jakarta.inject.Inject;
 
 import org.matsim.core.mobsim.qsim.QSim;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
 
 /**
  * Coordinates the movement of vehicles on the links and the nodes.
@@ -46,15 +48,22 @@ import org.matsim.core.mobsim.qsim.QSim;
 final class QNetsimEngineWithThreadpool extends AbstractQNetsimEngine<QNetsimEngineRunnerForThreadpool> {
 
 	private final int numOfRunners;
+	private final MyWorkerId myWorkerId;
+	private final NeighbourManager neighbourManager;
 	private ExecutorService pool;
 
 //	public QNetsimEngineWithThreadpool(final QSim sim) {
 //		this(sim, null);
 //	}
 
-	@Inject QNetsimEngineWithThreadpool(final QSim sim, QNetworkFactory netsimNetworkFactory) {
+	@Inject QNetsimEngineWithThreadpool(final QSim sim,
+										QNetworkFactory netsimNetworkFactory,
+										MyWorkerId workerId,
+										NeighbourManager neighbourManager) {
 		super(sim, netsimNetworkFactory);
+		this.neighbourManager = neighbourManager;
 		this.numOfRunners = this.numOfThreads;
+		this.myWorkerId = workerId;
 	}
 
 	@Override public void finishMultiThreading() {
@@ -104,6 +113,8 @@ final class QNetsimEngineWithThreadpool extends AbstractQNetsimEngine<QNetsimEng
 			for (Future<Boolean> future : pool.invokeAll(this.getQnetsimEngineRunner())) {
 				future.get();
 			}
+			// move sending and receving here???
+
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e) ;
 		} catch (ExecutionException e) {
@@ -125,6 +136,8 @@ final class QNetsimEngineWithThreadpool extends AbstractQNetsimEngine<QNetsimEng
 		List<QNetsimEngineRunnerForThreadpool> engines = new ArrayList<>();
 		for (int i = 0; i < numOfRunners; i++) {
 			QNetsimEngineRunnerForThreadpool engine = new QNetsimEngineRunnerForThreadpool();
+			engine.setMyWorkerId(this.myWorkerId.get());
+			engine.setNeighbourManager(this.neighbourManager);
 			engines.add(engine);
 		}
 		return engines;

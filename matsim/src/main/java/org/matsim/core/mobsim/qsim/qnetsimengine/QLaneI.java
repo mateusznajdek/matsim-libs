@@ -31,12 +31,12 @@ import org.matsim.vis.snapshotwriters.AgentSnapshotInfo;
 
 /**
  * Interface for QLanes, which (can) make up the QLinks.
- * 
+ *
  * @author nagel
  *
  */
 public interface QLaneI extends Identifiable<Lane> {
-	
+
 	void addFromWait( final QVehicle veh);
 
 	boolean isAcceptingFromWait(QVehicle veh);
@@ -44,13 +44,13 @@ public interface QLaneI extends Identifiable<Lane> {
 	boolean isActive();
 
 	double getSimulatedFlowCapacityPerTimeStep();
-	
+
 	void recalcTimeVariantAttributes();
-	
+
 	QVehicle getVehicle(final Id<Vehicle> vehicleId);
 
 	double getStorageCapacity();
-	
+
 	static interface VisData {
 		public Collection<AgentSnapshotInfo> addAgentSnapshotInfo(Collection<AgentSnapshotInfo> positions, double now ) ;
 	}
@@ -65,16 +65,16 @@ public interface QLaneI extends Identifiable<Lane> {
 	 * </ul>
 	 */
 	void addTransitSlightlyUpstreamOfStop(final QVehicle veh);
-	
+
 	void changeUnscaledFlowCapacityPerSecond( final double val ) ;
 
 	void changeEffectiveNumberOfLanes( final double val ) ;
 
-	boolean doSimStep();
+	boolean doSimStep(Collection<QVehicle> outGoingVehicles);
 
 	void clearVehicles();
 
-	Collection<MobsimVehicle> getAllVehicles();
+	Collection<QVehicle> getAllVehicles();
 
 	void addFromUpstream(final QVehicle veh);
 
@@ -96,7 +96,7 @@ public interface QLaneI extends Identifiable<Lane> {
 	 * the one with the smallest load.
 	 */
 	double getLoadIndicator() ;
-	
+
 	void initBeforeSimStep();
 	// yyyy could you please explain why this here was added.  Why can't the same thing be done at the beginning of "doSimStep"?  kai, nov'18
 

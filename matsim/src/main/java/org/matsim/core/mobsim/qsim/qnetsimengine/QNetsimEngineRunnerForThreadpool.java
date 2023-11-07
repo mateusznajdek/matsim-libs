@@ -23,15 +23,16 @@ package org.matsim.core.mobsim.qsim.qnetsimengine;
 import java.util.concurrent.Callable;
 
 import org.matsim.core.gbl.Gbl;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
 
 /**
  * Split up the old {@code QNetsimEngineRunner} which was implementing
  * 2 different approaches.
- * 
+ *
  * @author droeder @ Senozon Deutschland GmbH
  */
 final class QNetsimEngineRunnerForThreadpool extends AbstractQNetsimEngineRunner implements Callable<Boolean>{
-	
+
 	private volatile boolean simulationRunning = true;
 	private boolean movingNodes;
 
@@ -59,5 +60,12 @@ final class QNetsimEngineRunnerForThreadpool extends AbstractQNetsimEngineRunner
 
 	public final void setMovingNodes(boolean movingNodes) {
 		this.movingNodes = movingNodes;
+	}
+
+	final public void setMyWorkerId(final String id){
+		super.setMyWorkerId(id);
+	}
+	final public void setNeighbourManager(final NeighbourManager neighbourManager){
+		super.setNeighbourManager(neighbourManager);
 	}
 }

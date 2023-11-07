@@ -2,12 +2,12 @@ package org.matsim.core.mobsim.qsim.communication.service.server;
 
 
 import com.google.inject.Inject;
-import org.matsim.core.mobsim.qsim.communication.Configuration;
-import org.matsim.core.mobsim.qsim.communication.model.messages.WorkerConnectionMessage;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.matsim.core.config.groups.ParallelizationConfigGroup;
+import org.matsim.core.mobsim.qsim.communication.model.messages.WorkerConnectionMessage;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -28,12 +28,12 @@ public class ConnectionInitializationService {
 	private final ExecutorService listenerExecutor = newSingleThreadExecutor();
 	private final MessagePropagationService messagePropagationService;
 	private final WorkerRepository workerRepository;
-	private final Configuration configuration;
+	private final ParallelizationConfigGroup configuration;
 
 	@Inject
 	public ConnectionInitializationService(MessagePropagationService messagePropagationService,
 										   WorkerRepository workerRepository,
-										   Configuration configuration) {
+										   ParallelizationConfigGroup configuration) {
 		this.messagePropagationService = messagePropagationService;
 		this.workerRepository = workerRepository;
 		this.configuration = configuration;

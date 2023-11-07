@@ -1,0 +1,5 @@
+Move it (whole logic around communication) to qsim package
+org.matsim.core.mobsim.qsim.QSim.run() - wrap whole communication aroud it
+config <- think about moving it to
+
+how to hook into events like closing app?

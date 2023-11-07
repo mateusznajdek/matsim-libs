@@ -30,7 +30,7 @@
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
 		<param name="startTime" value="00:00:00" />
 		<param name="endTime" value="00:00:00" />
-	
+
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing -->
 	</module>
 
@@ -73,7 +73,7 @@
 			</parameterset>
 		</parameterset>
 	</module>
-	
+
 	<module name="strategy">
 		<param name="maxAgentPlanMemorySize" value="5" /> <!-- 0 means unlimited -->
 
@@ -86,6 +86,13 @@
 			<param name="strategyName" value="ReRoute"/>
 			<param name="weight" value="0.1"/>
 		</parameterset>
+	</module>
+
+	<module name="parallelization">
+		<param name="serverIp" value="127.0.0.1" />
+		<param name="serverPort" value="8081" />
+		<param name="workerCount" value="2" />
+		<param name="serverOnThisMachine" value="false" />
 	</module>
 
 </config>
