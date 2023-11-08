@@ -98,16 +98,10 @@ public class MessageSenderService implements Subscriber {
 	public void broadcast(Message message) {
 		connectionMap.forEach((workerId, connection) -> {
 			try {
-				// TODO remove it, just for tests
-//				int sleepTimeMs = new Random().nextInt(100, 3000);
-//				LOG.info("Going to sleep for " + sleepTimeMs + "ms");
-//				try {
-//					Thread.sleep(sleepTimeMs);
-//				} catch (InterruptedException e) {
-//					throw new RuntimeException(e);
-//				}
-//				LOG.info("Sending sync message to " + workerId);
 				connection.send(message);
+			} catch (SocketException e) {
+				System.out.println("dupa :(");
+				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

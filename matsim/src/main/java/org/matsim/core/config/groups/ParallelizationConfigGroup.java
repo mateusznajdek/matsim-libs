@@ -57,13 +57,6 @@ public final class ParallelizationConfigGroup extends ReflectiveConfigGroup {
 	@Override
 	public final Map<String, String> getComments() {
 		Map<String, String> map = super.getComments();
-
-//		final String message = "Deprecated, do not use.  The file is loaded when the filename is given.  Functionality needs to be switched on elsewhere.";
-//		map.put(USE_LANES, message) ;
-//		map.put(USE_HOUSEHOLDS, message); // since jul'15
-//		map.put(USE_VEHICLES, message); // since jul'15
-//		map.put(USE_TRANSIT, "Deprecated, do not use.  See transit section of config file.") ; // since jul'15
-
 		return map;
 	}
 
