@@ -75,7 +75,7 @@
 			</parameterset>
 		</parameterset>
 	</module>
-	
+
 	<module name="strategy">
 		<param name="maxAgentPlanMemorySize" value="5" /> <!-- 0 means unlimited -->
 
@@ -95,4 +95,10 @@
 		</parameterset>
 	</module>
 
+	<module name="parallelization">
+		<param name="serverIp" value="127.0.0.1" />
+		<param name="serverPort" value="8081" />
+		<param name="workerCount" value="5" />
+		<param name="serverOnThisMachine" value="false" />
+	</module>
 </config>
