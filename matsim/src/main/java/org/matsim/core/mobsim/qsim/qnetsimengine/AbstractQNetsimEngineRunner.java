@@ -99,9 +99,6 @@ abstract class AbstractQNetsimEngineRunner extends NetElementActivationRegistry 
 		Iterator<QNodeI> simNodes = this.nodesQueue.iterator();
 		while (simNodes.hasNext()) {
 			node = simNodes.next();
-//			remainsActive = node.doSimStep(time);
-			remainsActive = false;
-			System.out.println("workerID: " + myWorkerId + "  partition: " + node.getNode().getAttributes().getAttribute("partition"));
 			remainsActive = node.doSimStep(time);
 
 //			if (workerId.equals(node.getNode().getAttributes().getAttribute("partition"))) {
@@ -121,14 +118,15 @@ abstract class AbstractQNetsimEngineRunner extends NetElementActivationRegistry 
 		lockLinks = true;
 		QLinkI link;
 		ListIterator<QLinkI> simLinks = this.linksList.listIterator();
+		Collection<QVehicle> outGoingVehicles = new ArrayList<>();
 		while (simLinks.hasNext()) {
 			link = simLinks.next();
 
 //			remainsActive = link.doSimStep();
-			System.out.println("LINK::: workerID: " + myWorkerId + "  partition: " + link.getLink().getAttributes().getAttribute("partition"));
-			Collection<QVehicle> outGoingVehicles = new ArrayList<>();
+//			System.out.println("LINK::: workerID: " + myWorkerId + "  partition: " + link.getLink().getAttributes().getAttribute("partition"));
 			remainsActive = link.doSimStep(outGoingVehicles);
 
+			// TODO uncomment
 			neighbourManager.collectCarsFromLane(outGoingVehicles);
 
 			//Checking the neighbourhoods of current worker

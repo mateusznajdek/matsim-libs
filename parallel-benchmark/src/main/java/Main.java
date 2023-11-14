@@ -24,27 +24,17 @@ public class Main {
 		} else if (args.length == 1) {
 			LOG.info("App started with single argument");
 			LOG.info("Argument: " + args[0]);
-			config = ConfigUtils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("equil"), "config.xml"));
+			config = ConfigUtils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("berlin"), "config.xml"));
 			config.parallelization().setWorkerId(args[0]);
 		} else {
 			LOG.info("App started with more than 1 arguments");
 			config = ConfigUtils.loadConfig(args);
 		}
 
-		System.out.println(config.network());
-
 		config.controler().setOverwriteFileSetting(OverwriteFileSetting.deleteDirectoryIfExists);
-		config.controler().setLastIteration(2);
-
-		LOG.info("CONFIGS:");
-		LOG.info(config.parallelization().getServerIp());
-		LOG.info(config.parallelization().getServerPort());
-		LOG.info(config.parallelization().getWorkerCount());
-		LOG.info(config.parallelization().getServerOnThisMachine());
+		config.controler().setLastIteration(0);
 
 		// possibly modify config here
-
-		//TODO this is not enough in cluster pid will have collisions
 		String newOutputDirectory = config.controler().getOutputDirectory() + "/" + getCurrentTimeStamp() + "/"
 			+ config.parallelization().getWorkerId();
 		config.controler().setOutputDirectory(newOutputDirectory);
@@ -54,8 +44,6 @@ public class Main {
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 
 		// possibly modify scenario here
-		scenario.getNetwork().getNodes();
-//		scenario.getNetwork().getLinks().values().forEach(link -> System.out.println(link.getAttributes().getAttribute("partition")));
 		// ---
 
 		Controler controler = new Controler(scenario);
@@ -70,7 +58,6 @@ public class Main {
 		// ---
 
 		controler.run();
-		LOG.info("Output: " + newOutputDirectory);
 	}
 
 	public static String getCurrentTimeStamp() {

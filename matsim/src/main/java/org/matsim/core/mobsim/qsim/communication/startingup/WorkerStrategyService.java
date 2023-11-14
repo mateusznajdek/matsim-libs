@@ -16,6 +16,7 @@ import org.matsim.core.mobsim.qsim.communication.service.worker.MessageReceiverS
 import org.matsim.core.mobsim.qsim.communication.service.worker.MessageSenderService;
 import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.communication.service.worker.WorkerSubscriptionService;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -31,6 +32,7 @@ public class WorkerStrategyService implements Strategy, Runnable, Subscriber {
 	private final MessageReceiverService messageReceiverService;
 	private final ExecutorService simulationExecutor = newSingleThreadExecutor();
 	public final MyWorkerId myWorkerId;
+	private final NeighbourManager neighbourManager;
 	private final AtomicBoolean shouldRunSim = new AtomicBoolean(false);
 
 	@Inject
@@ -38,12 +40,14 @@ public class WorkerStrategyService implements Strategy, Runnable, Subscriber {
 								 MessageSenderService messageSenderService,
 								 MessageReceiverService messageReceiverService,
 								 ParallelizationConfigGroup configuration,
-								 MyWorkerId myWorkerId) {
+								 MyWorkerId myWorkerId,
+								 NeighbourManager neighbourManager) {
 		this.subscriptionService = subscriptionService;
 		this.configuration = configuration;
 		this.messageSenderService = messageSenderService;
 		this.messageReceiverService = messageReceiverService;
 		this.myWorkerId = myWorkerId;
+		this.neighbourManager = neighbourManager;
 		this.myWorkerId.create();
 		//		init();
 	}
@@ -93,6 +97,7 @@ public class WorkerStrategyService implements Strategy, Runnable, Subscriber {
 
 	private void handleInitializationMessage(ServerInitializationMessage message) {
 		// TODO simulation initialization goes HERE...
+		neighbourManager.setupNeighboursConnections();
 		try {
 			messageSenderService.sendServerMessage(new CompletedInitializationMessage());
 		} catch (IOException e) {

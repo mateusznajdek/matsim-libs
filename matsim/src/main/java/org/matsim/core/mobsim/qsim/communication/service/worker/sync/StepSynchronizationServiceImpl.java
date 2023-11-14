@@ -52,7 +52,7 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 	@Override
 	public void sendSyncMessageToNeighbours() {
 		SyncStepMessage syncMsg = new SyncStepMessage(myWorkerId.get());
-		messageSenderService.broadcast(syncMsg);
+		neighbourManager.sendToNeighbours(syncMsg);
 	}
 
 	@Override
@@ -68,8 +68,8 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 
 	@Override
 	public synchronized void getSyncMessages() {
-		LOG.debug("Getting all sync messages"); // info for demonstration
-		int countOfNeighbours = this.configuration.getWorkerCount() - 1;
+		int countOfNeighbours = neighbourManager.getNumberOfNeighbours();
+		LOG.info("Getting all sync messages from: " + countOfNeighbours + " neighbours"); // info for demonstration
 		int readedMessage = 0;
 		while (incomingMessages.size() < countOfNeighbours && readedMessage < countOfNeighbours) {
 			try {

@@ -57,6 +57,7 @@ public class QVehicleImpl implements QVehicle {
 	private double linkEnterTime = 0. ;
 	private double earliestLinkExitTime = 0;
 	private DriverAgent driver = null;
+	// This is not necessary
 	private Collection<PassengerAgent> passengers = null;
 	private final Id<Vehicle> id;
 	private Link currentLink = null;

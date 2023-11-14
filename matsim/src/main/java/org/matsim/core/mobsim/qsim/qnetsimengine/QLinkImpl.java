@@ -128,12 +128,12 @@ public final class QLinkImpl extends AbstractQLink implements SignalizeableItem 
 	@Override
 	public boolean doSimStep(Collection<QVehicle> outGoingVehicles) {
 
-		// Are you  outgoing link?
-		if (!this.getLink().getFromNode().getAttributes().getAttribute("partition").equals(this.getLink().getToNode().getAttributes().getAttribute("partition"))) {
-			var vehicles = qlane.getAllVehicles();
-			qlane.clearVehicles();
-			outGoingVehicles.addAll(vehicles);
-		} else {
+		// Are you  outgoing link? TODO this is broken?
+//		if (!this.getLink().getFromNode().getAttributes().getAttribute("partition").equals(this.getLink().getToNode().getAttributes().getAttribute("partition"))) {
+//			var vehicles = qlane.getAllVehicles();
+//			qlane.clearVehicles();
+//			outGoingVehicles.addAll(vehicles);
+//		} else {
 			double now = context.getSimTimer().getTimeOfDay();
 			qlane.initBeforeSimStep();
 
@@ -145,7 +145,7 @@ public final class QLinkImpl extends AbstractQLink implements SignalizeableItem 
 				this.getTransitQLink().handleTransitVehiclesInStopQueue(now);
 				qlane.doSimStep(outGoingVehicles);
 				this.moveWaitToRoad();
-			}
+//			}
 		}
 
 		this.setActive(this.checkForActivity());

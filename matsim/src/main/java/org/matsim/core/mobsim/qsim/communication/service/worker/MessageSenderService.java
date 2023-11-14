@@ -23,41 +23,25 @@ import java.util.Map;
 
 public class MessageSenderService implements Subscriber {
 	private final static Logger LOG = LogManager.getLogger(MessageSenderService.class);
-
-	private final Map<WorkerId, Connection> neighbourRepository = new HashMap<>();
-	private final Map<WorkerId, Connection> connectionMap = new HashMap<>();
 	@Getter
+	private final Map<WorkerId, Connection> connectionMap = new HashMap<>();
+
 	private final Map<WorkerId, ConnectionDto> connectionDtoMap = new HashMap<>();
 	private final ParallelizationConfigGroup configuration;
-	private final NeighbourManager neighbourManager;
 	private Connection serverConnection;
 	private final WorkerSubscriptionService subscriptionService;
 
 	@Inject
 	public MessageSenderService(WorkerSubscriptionService subscriptionService,
-								ParallelizationConfigGroup configuration,
-								NeighbourManager neighbourManager) {
+								ParallelizationConfigGroup configuration) {
 		this.subscriptionService = subscriptionService;
 		this.configuration = configuration;
-		this.neighbourManager = neighbourManager;
 		init();
 	}
 
 	//	@PostConstruct
 	void init() {
 		subscriptionService.subscribe(this, MessagesTypeEnum.ServerInitializationMessage);
-		neighbourManager.getMyNeighboursIds()
-			.stream()
-			.map(rawWorkerId -> new WorkerId(String.valueOf(rawWorkerId)))
-			.filter(connectionMap::containsKey)
-			.forEach(workerId -> neighbourRepository.put(workerId, connectionMap.get(workerId)));
-
-		// vs
-
-//		connectionMap.forEach((workerId, connection) -> {
-//			if (neighbourManager.getMyNeighboursIds().contains(Integer.valueOf(workerId.getId())))
-//				neighbourRepository.put(workerId, connectionMap.get(workerId));
-//		});
 	}
 
 	/**
@@ -100,21 +84,7 @@ public class MessageSenderService implements Subscriber {
 			try {
 				connection.send(message);
 			} catch (SocketException e) {
-				System.out.println("dupa :(");
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
-	}
-
-	// TODO think if implement it this way!
-	public void sendToNeighbours(Message message) {
-		neighbourRepository.forEach((workerId, connection) -> {
-			try {
-				connection.send(message);
-			} catch (SocketException e) {
-				System.out.println("dupa :(");
+				System.out.println("Sending " + message.getMessageType() + " to all: " + connectionMap.keySet().size());
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();

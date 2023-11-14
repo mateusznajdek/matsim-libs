@@ -275,6 +275,7 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 
 			int simStep = 0; // for debug
 
+			// TODO uncomment
 			workerStrategyService.waitForSimToRun();
 
 			// do iterations
@@ -291,6 +292,7 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 			// Without this finally, in case of a crash, threads are not closed, which lead to process hanging forever
 			// at least on the eth euler cluster (but not on our local machines at ivt!?) td oct 15
 			try {
+				//				TODO uncomment
 				stepSynchronizationService.sendFinishMessageToServer();
 				cleanupSim();
 			} catch (RuntimeException cleanupException) {
@@ -316,6 +318,7 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 	 */
 	/*package*/ void prepareSim() {
 		// setup for parallelization module - select starting mode of app
+//		TODO uncomment
 		this.strategySelectionService.selectModeAndStartSimulation(this);
 
 		events.initProcessing();
@@ -439,7 +442,6 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 
 			mobsimEngine.doSimStep(now);
 
-
 			if (analyzeRunTimes)
 				this.mobsimEngineRunTimes.get(mobsimEngine).addAndGet(System.nanoTime() - this.startClockTime);
 		}
@@ -464,6 +466,7 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 
 		if (doContinue) {
 			this.simTimer.incrementTime();
+			//TODO uncomment
 			stepSynchronizationService.sendSyncMessageToNeighbours();
 			stepSynchronizationService.getSyncMessages();
 
@@ -475,7 +478,6 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 		if (analyzeRunTimes) this.qSimInternalTime += System.nanoTime() - this.startClockTime;
 
 		return doContinue;
-
 	}
 
 	public void insertAgentIntoMobsim(final MobsimAgent agent) {
