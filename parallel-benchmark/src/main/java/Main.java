@@ -24,7 +24,7 @@ public class Main {
 		} else if (args.length == 1) {
 			LOG.info("App started with single argument");
 			LOG.info("Argument: " + args[0]);
-			config = ConfigUtils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("berlin"), "config.xml"));
+			config = ConfigUtils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("equil"), "config.xml"));
 			config.parallelization().setWorkerId(args[0]);
 		} else {
 			LOG.info("App started with more than 1 arguments");

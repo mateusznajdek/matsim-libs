@@ -3,56 +3,63 @@ package org.matsim.core.mobsim.qsim.communication.service.worker.sync;
 import com.google.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.config.groups.ParallelizationConfigGroup;
+import org.matsim.core.mobsim.qsim.communication.Connection;
 import org.matsim.core.mobsim.qsim.communication.Subscriber;
 import org.matsim.core.mobsim.qsim.communication.model.MessagesTypeEnum;
+import org.matsim.core.mobsim.qsim.communication.model.WorkerId;
 import org.matsim.core.mobsim.qsim.communication.model.messages.FinishSimulationMessage;
 import org.matsim.core.mobsim.qsim.communication.model.messages.Message;
 import org.matsim.core.mobsim.qsim.communication.model.messages.SyncStepMessage;
 import org.matsim.core.mobsim.qsim.communication.service.worker.MessageSenderService;
 import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.communication.service.worker.WorkerSubscriptionService;
+import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicle;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.SocketException;
+import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class StepSynchronizationServiceImpl implements StepSynchronizationService, Subscriber {
 	private final static Logger LOG = LogManager.getLogger(StepSynchronizationServiceImpl.class);
 
 	private final WorkerSubscriptionService subscriptionService;
-	//	private final TaskExecutorService taskExecutorService;
+	//  private final TaskExecutorService taskExecutorService;
 	private final MessageSenderService messageSenderService;
-	private final List<SyncStepMessage> incomingMessages = new ArrayList<>();
-	private final List<SyncStepMessage> futureIncomingMessages = new ArrayList<>();
-	private final ParallelizationConfigGroup configuration;
-	private final MyWorkerId myWorkerId;
+	private final BlockingQueue<SyncStepMessage> incomingMessages = new LinkedBlockingQueue<>();
+	private final BlockingQueue<SyncStepMessage> futureIncomingMessages = new LinkedBlockingQueue<>();
 	private final NeighbourManager neighbourManager;
+	private final MyWorkerId myWorkerId;
 
-	@Inject
-	public StepSynchronizationServiceImpl(WorkerSubscriptionService subscriptionService,
-//										  TaskExecutorService taskExecutorService,
-										  MessageSenderService messageSenderService,
-										  ParallelizationConfigGroup configuration,
-										  MyWorkerId myWorkerId,
-										  NeighbourManager neighbourManager) {
-		this.subscriptionService = subscriptionService;
-//		this.taskExecutorService = taskExecutorService;
-		this.messageSenderService = messageSenderService;
-		this.configuration = configuration;
-		this.myWorkerId = myWorkerId;
-		this.neighbourManager = neighbourManager;
-		init();
-	}
-
-	private void init() {
+	@PostConstruct
+	void init() {
 		subscriptionService.subscribe(this, MessagesTypeEnum.SyncStepMessage);
 	}
 
+	@Inject
+	public StepSynchronizationServiceImpl(
+		WorkerSubscriptionService subscriptionService,
+		MessageSenderService messageSenderService,
+		NeighbourManager neighbourManager,
+		MyWorkerId myWorkerId
+	) {
+		this.neighbourManager = neighbourManager;
+		this.myWorkerId = myWorkerId;
+		this.messageSenderService = messageSenderService;
+		this.subscriptionService = subscriptionService;
+//		this.taskExecutorService = taskExecutorService;
+		init();
+	}
+
 	@Override
-	public void sendSyncMessageToNeighbours() {
-		SyncStepMessage syncMsg = new SyncStepMessage(myWorkerId.get());
-		neighbourManager.sendToNeighbours(syncMsg);
+	public synchronized void sendSyncMessageToNeighbours() {
+		neighbourManager.sendSyncMessageToNeighbours();
 	}
 
 	@Override
@@ -67,50 +74,68 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 	}
 
 	@Override
-	public synchronized void getSyncMessages() {
+	public /*synchronized*/ void getSyncMessages() {
 		int countOfNeighbours = neighbourManager.getNumberOfNeighbours();
-		LOG.info("Getting all sync messages from: " + countOfNeighbours + " neighbours"); // info for demonstration
-		int readedMessage = 0;
-		while (incomingMessages.size() < countOfNeighbours && readedMessage < countOfNeighbours) {
+//		LOG.info(Thread.currentThread() + "::: Getting all sync messages from: " + countOfNeighbours + " neighbours"); // info for demonstration
+//		List<Future<?>> injectIncomingCarFutures = new LinkedList<>();  TODO this will for actual processing
+		int consumedMessages = 0;
+		// List<Runnable> injectIncomingCarTasks = new LinkedList<>();
+
+		while (consumedMessages < countOfNeighbours) {
 			try {
-				this.wait(1000);
-				readedMessage += applyMessages(readedMessage);
+				LOG.info(Thread.currentThread() + " waiting for messages..."
+					+ ", incomingMessages: " + incomingMessages.size()
+					+ ", futureIM: " + futureIncomingMessages.size());
+
+				SyncStepMessage msg = incomingMessages.take(); // TODO processing of this f$@#ing message
+
+				LOG.info(Thread.currentThread() + " got something here"
+					+ ", incomingMessages: " + incomingMessages.size()
+					+ ", futureIM: " + futureIncomingMessages.size());
+
+//				List<Future<?>> f = taskExecutorService.executeBatchReturnFutures(
+//					List.of(new InjectIncomingCarsTask(msg.getCars(), mapFragment)));
+//				injectIncomingCarFutures.addAll(f);
+				// injectIncomingCarTasks.addAll(List.of(new InjectIncomingCarsTask(msg.getCars(), mapFragment)));
+				consumedMessages += 1;
+
 			} catch (InterruptedException e) {
-				LOG.error(e.getMessage());
+				LOG.error("Exception when waiting for cars: " + e);
 				throw new RuntimeException(e);
 			}
 		}
 
-		applyMessages(readedMessage);
-		incomingMessages.addAll(futureIncomingMessages);
-		futureIncomingMessages.clear();
+		LOG.info(Thread.currentThread() + "::: Got all sync messages"
+			+ ", incomingMessages: " + incomingMessages.size()
+			+ ", futureIM: " + futureIncomingMessages.size());
 
-		LOG.info("Got all sync messages");
-	}
+//		taskExecutorService.waitForAllTaskFinished(injectIncomingCarFutures);
+		// taskExecutorService.executeBatch(injectIncomingCarTasks);
+		incomingMessages.clear();
+		futureIncomingMessages.drainTo(incomingMessages);
 
-	private int applyMessages(int start) {
-		List<SyncStepMessage> injectIncomingCarTasks = incomingMessages.subList(start, incomingMessages.size());
-//			.stream()
-//			.map(message -> new InjectIncomingCarsTask(message.getCars(), mapFragment))
-//			.collect(Collectors.toList());
-
-//		taskExecutorService.executeBatch(injectIncomingCarTasks);
-		return injectIncomingCarTasks.size();
+		LOG.info(Thread.currentThread() + "::: Drain"
+			+ ", incomingMessages: " + incomingMessages.size()
+			+ ", futureIM: " + futureIncomingMessages.size());
 	}
 
 	@Override
-	public synchronized void notify(Message message) {
+	public void notify(Message message) {
 		if (message.getMessageType() != MessagesTypeEnum.SyncStepMessage) {
 			return;
 		}
 
 		SyncStepMessage carTransferMessage = (SyncStepMessage) message;
+		LOG.info(Thread.currentThread() + "SyncStepMessage from w: " + carTransferMessage.getWorkerId() +
+			", random: " + carTransferMessage.getRandom()
+			+ ", step: " + carTransferMessage.getStep()
+			+ ", incomingMessages: " + incomingMessages.size()
+			+ ", futureIM: " + futureIncomingMessages.size());
 		if (incomingMessages.contains(carTransferMessage)) {
 			futureIncomingMessages.add(carTransferMessage);
 		} else {
 			incomingMessages.add(carTransferMessage);
+			// notifyAll();
 		}
-
-		notifyAll();
 	}
 }

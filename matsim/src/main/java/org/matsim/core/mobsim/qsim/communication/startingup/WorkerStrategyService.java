@@ -17,6 +17,7 @@ import org.matsim.core.mobsim.qsim.communication.service.worker.MessageSenderSer
 import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.communication.service.worker.WorkerSubscriptionService;
 import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;

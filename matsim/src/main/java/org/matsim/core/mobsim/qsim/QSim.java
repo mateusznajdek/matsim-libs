@@ -466,7 +466,6 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 
 		if (doContinue) {
 			this.simTimer.incrementTime();
-			//TODO uncomment
 			stepSynchronizationService.sendSyncMessageToNeighbours();
 			stepSynchronizationService.getSyncMessages();
 

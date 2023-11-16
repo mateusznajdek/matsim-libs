@@ -10,6 +10,8 @@ public class SyncStepMessage implements Message {
 
 	//  private final List<SerializedCar> cars;
 	String workerId;
+	int random;
+	int step;
 
 	@Override
 	public MessagesTypeEnum getMessageType() {
