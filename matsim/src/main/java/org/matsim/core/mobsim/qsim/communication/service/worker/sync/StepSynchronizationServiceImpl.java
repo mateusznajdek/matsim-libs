@@ -23,7 +23,9 @@ import java.net.SocketException;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class StepSynchronizationServiceImpl implements StepSynchronizationService, Subscriber {
@@ -33,9 +35,20 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 	//  private final TaskExecutorService taskExecutorService;
 	private final MessageSenderService messageSenderService;
 	private final BlockingQueue<SyncStepMessage> incomingMessages = new LinkedBlockingQueue<>();
-	private final BlockingQueue<SyncStepMessage> futureIncomingMessages = new LinkedBlockingQueue<>();
-	private final NeighbourManager neighbourManager;
+	private final BlockingQueue<SyncStepMessage> futureIncomingMessages = new PriorityBlockingQueue<>();
+	private final ParallelizationConfigGroup configuration;
 	private final MyWorkerId myWorkerId;
+
+	private final Network network;
+	private final Map<WorkerId, Connection> neighbourRepository = new HashMap<>();
+
+	// The key is the unwrapped WorkerId for which we want to accumulate vehicles to send to
+	private final Map<String, Collection<QVehicle>> vehiclesToSend = new HashMap<>();
+
+	private final AtomicInteger sendingStep = new AtomicInteger(0);
+	private final AtomicInteger receivingStep = new AtomicInteger(0);
+
+	private IncomingMessageBuffer incomingMessageBuffer = new IncomingMessageBuffer(incomingMessages, futureIncomingMessages);
 
 	@PostConstruct
 	void init() {
@@ -46,20 +59,56 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 	public StepSynchronizationServiceImpl(
 		WorkerSubscriptionService subscriptionService,
 		MessageSenderService messageSenderService,
-		NeighbourManager neighbourManager,
-		MyWorkerId myWorkerId
+		ParallelizationConfigGroup configuration,
+		MyWorkerId myWorkerId,
+		Network network
 	) {
-		this.neighbourManager = neighbourManager;
 		this.myWorkerId = myWorkerId;
+		this.network = network;
 		this.messageSenderService = messageSenderService;
 		this.subscriptionService = subscriptionService;
 //		this.taskExecutorService = taskExecutorService;
+		this.configuration = configuration;
 		init();
 	}
 
+
 	@Override
-	public synchronized void sendSyncMessageToNeighbours() {
-		neighbourManager.sendSyncMessageToNeighbours();
+	public void collectCarsFromLane(Collection<QVehicle> outGoingVehicles) {
+		// TODO uncomment
+		for (var veh : outGoingVehicles) {
+			var _currLinkId = veh.getDriver().getCurrentLinkId();
+			String partition = String.valueOf(network.getLinks().get(_currLinkId).getAttributes().getAttribute("partition"));
+//				collect all vehicles going to each worker and send them in single iteration
+			vehiclesToSend.putIfAbsent(partition, new ArrayList<>());
+			vehiclesToSend.get(partition).add(veh);
+		}
+	}
+
+	@Override
+	public void setupNeighboursConnections() {
+		getMyNeighboursIds()
+			.stream()
+			.map(rawWorkerId -> new WorkerId(String.valueOf(rawWorkerId)))
+			.filter(messageSenderService.getConnectionMap()::containsKey)
+			.forEach(workerId -> neighbourRepository.put(workerId, messageSenderService.getConnectionMap().get(workerId)));
+		// vs
+
+//		connectionMap.forEach((workerId, connection) -> {
+//			if (neighbourManager.getMyNeighboursIds().contains(Integer.valueOf(workerId.getId())))
+//				neighbourRepository.put(workerId, connectionMap.get(workerId));
+//		});
+	}
+
+	@Override
+	public int getNumberOfNeighbours() {
+		return neighbourRepository.size();
+	}
+
+	@Override
+	public void sendSyncMessageToNeighbours() {
+		SyncStepMessage syncMsg = new SyncStepMessage(myWorkerId.get(), ThreadLocalRandom.current().nextInt(), sendingStep.getAndIncrement());
+		sendToNeighbours(syncMsg);
 	}
 
 	@Override
@@ -73,69 +122,92 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 		}
 	}
 
-	@Override
-	public /*synchronized*/ void getSyncMessages() {
-		int countOfNeighbours = neighbourManager.getNumberOfNeighbours();
-//		LOG.info(Thread.currentThread() + "::: Getting all sync messages from: " + countOfNeighbours + " neighbours"); // info for demonstration
-//		List<Future<?>> injectIncomingCarFutures = new LinkedList<>();  TODO this will for actual processing
-		int consumedMessages = 0;
-		// List<Runnable> injectIncomingCarTasks = new LinkedList<>();
+	private Set<Integer> getMyNeighboursIds() {
+		return network.getLinks().values().stream()
+			.filter(l -> !l.getToNode().getAttributes().getAttribute("partition").equals(l.getFromNode().getAttributes().getAttribute("partition")))
+			.filter(l -> l.getFromNode().getAttributes().getAttribute("partition").equals(Integer.valueOf(myWorkerId.get())) ||
+				l.getToNode().getAttributes().getAttribute("partition").equals(Integer.valueOf(myWorkerId.get())))
+			.map(l -> {
+				if (!l.getToNode().getAttributes().getAttribute("partition").equals(Integer.valueOf(myWorkerId.get()))) {
+					return (Integer) l.getToNode().getAttributes().getAttribute("partition");
+				} else if (!l.getFromNode().getAttributes().getAttribute("partition").equals(Integer.valueOf(myWorkerId.get()))) {
+					return (Integer) l.getFromNode().getAttributes().getAttribute("partition");
+				} else {
+					throw new RuntimeException("Whole world is destroyed!");
+				}
+			})
+			.collect(Collectors.toSet());
+	}
 
-		while (consumedMessages < countOfNeighbours) {
+	private void sendToNeighbours(Message message) {
+		neighbourRepository.forEach((workerId, connection) -> {
 			try {
-				LOG.info(Thread.currentThread() + " waiting for messages..."
+				connection.send(message);
+				LOG.debug(Thread.currentThread() + "::: Sending sync " + message.getMessageType() + " to neighbour: "
+					+ workerId.getId() + " with msgId: " + ((SyncStepMessage) message).getWorkerId() +
+					", random: " + ((SyncStepMessage) message).getRandom()
+					+ ", step: " + ((SyncStepMessage) message).getStep());
+			} catch (SocketException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	@Override
+	public void getSyncMessages() {
+		int countOfNeighbours = this.getNumberOfNeighbours();
+		LOG.debug(Thread.currentThread() + "::: Getting all sync messages from: " + countOfNeighbours + " neighbours"); // info for demonstration
+//		List<Future<?>> injectIncomingCarFutures = new LinkedList<>();  TODO this will for actual processing
+		incomingMessageBuffer.initConsumedMessages();
+		while (incomingMessageBuffer.getConsumedMessages() < countOfNeighbours) {
+			try {
+				LOG.debug(Thread.currentThread() + " waiting for messages..."
+					+ ", incomingMessages: " + incomingMessages.size()
+					+ ", futureIM: " + futureIncomingMessages.size());
+				SyncStepMessage msg = incomingMessages.take();
+
+				LOG.debug(Thread.currentThread() + " got something here"
 					+ ", incomingMessages: " + incomingMessages.size()
 					+ ", futureIM: " + futureIncomingMessages.size());
 
-				SyncStepMessage msg = incomingMessages.take(); // TODO processing of this f$@#ing message
+				this.incomingMessageBuffer.processNewMsg(countOfNeighbours);
 
-				LOG.info(Thread.currentThread() + " got something here"
-					+ ", incomingMessages: " + incomingMessages.size()
-					+ ", futureIM: " + futureIncomingMessages.size());
+				LOG.debug(Thread.currentThread() + " processed");
 
+//				consumedMessages = incomingMessageBuffer.take(consumedMessages, countOfNeighbours);
+
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 //				List<Future<?>> f = taskExecutorService.executeBatchReturnFutures(
 //					List.of(new InjectIncomingCarsTask(msg.getCars(), mapFragment)));
 //				injectIncomingCarFutures.addAll(f);
-				// injectIncomingCarTasks.addAll(List.of(new InjectIncomingCarsTask(msg.getCars(), mapFragment)));
-				consumedMessages += 1;
+			// injectIncomingCarTasks.addAll(List.of(new InjectIncomingCarsTask(msg.getCars(), mapFragment)));
 
-			} catch (InterruptedException e) {
-				LOG.error("Exception when waiting for cars: " + e);
-				throw new RuntimeException(e);
-			}
 		}
 
-		LOG.info(Thread.currentThread() + "::: Got all sync messages"
+		LOG.debug(Thread.currentThread() + "::: Got all sync messages"
 			+ ", incomingMessages: " + incomingMessages.size()
 			+ ", futureIM: " + futureIncomingMessages.size());
+
 
 //		taskExecutorService.waitForAllTaskFinished(injectIncomingCarFutures);
 		// taskExecutorService.executeBatch(injectIncomingCarTasks);
-		incomingMessages.clear();
-		futureIncomingMessages.drainTo(incomingMessages);
 
-		LOG.info(Thread.currentThread() + "::: Drain"
+		LOG.debug(Thread.currentThread() + "::: Drain"
 			+ ", incomingMessages: " + incomingMessages.size()
 			+ ", futureIM: " + futureIncomingMessages.size());
 	}
+
 
 	@Override
 	public void notify(Message message) {
 		if (message.getMessageType() != MessagesTypeEnum.SyncStepMessage) {
 			return;
 		}
-
 		SyncStepMessage carTransferMessage = (SyncStepMessage) message;
-		LOG.info(Thread.currentThread() + "SyncStepMessage from w: " + carTransferMessage.getWorkerId() +
-			", random: " + carTransferMessage.getRandom()
-			+ ", step: " + carTransferMessage.getStep()
-			+ ", incomingMessages: " + incomingMessages.size()
-			+ ", futureIM: " + futureIncomingMessages.size());
-		if (incomingMessages.contains(carTransferMessage)) {
-			futureIncomingMessages.add(carTransferMessage);
-		} else {
-			incomingMessages.add(carTransferMessage);
-			// notifyAll();
-		}
+		this.incomingMessageBuffer.give(carTransferMessage);
 	}
 }

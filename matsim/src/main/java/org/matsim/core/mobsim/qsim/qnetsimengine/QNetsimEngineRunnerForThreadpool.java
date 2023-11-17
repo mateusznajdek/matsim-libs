@@ -24,6 +24,7 @@ import java.util.concurrent.Callable;
 
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 
 /**
  * Split up the old {@code QNetsimEngineRunner} which was implementing
@@ -65,7 +66,7 @@ final class QNetsimEngineRunnerForThreadpool extends AbstractQNetsimEngineRunner
 	final public void setMyWorkerId(final String id){
 		super.setMyWorkerId(id);
 	}
-	final public void setNeighbourManager(final NeighbourManager neighbourManager){
+	final public void setNeighbourManager(final StepSynchronizationService neighbourManager){
 		super.setNeighbourManager(neighbourManager);
 	}
 }

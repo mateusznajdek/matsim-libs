@@ -6,7 +6,7 @@ import org.matsim.core.mobsim.qsim.communication.model.MessagesTypeEnum;
 
 @Getter
 @AllArgsConstructor
-public class SyncStepMessage implements Message {
+public class SyncStepMessage implements Message, Comparable<SyncStepMessage> {
 
 	//  private final List<SerializedCar> cars;
 	String workerId;
@@ -16,5 +16,19 @@ public class SyncStepMessage implements Message {
 	@Override
 	public MessagesTypeEnum getMessageType() {
 		return MessagesTypeEnum.SyncStepMessage;
+	}
+
+	@Override
+	public int compareTo(SyncStepMessage newVal) {
+		return Integer.compare(this.step, newVal.getStep());
+	}
+
+	@Override
+	public String toString() {
+		return "SyncStepMessage{" +
+			"workerId='" + workerId + '\'' +
+			", random=" + random +
+			", step=" + step +
+			'}';
 	}
 }

@@ -22,6 +22,7 @@ package org.matsim.core.mobsim.qsim.qnetsimengine;
 
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -70,7 +71,7 @@ abstract class AbstractQNetsimEngineRunner extends NetElementActivationRegistry 
 	private long startTime = 0;
 	private String myWorkerId;
 
-	private NeighbourManager neighbourManager;
+	private StepSynchronizationService neighbourManager;
 
 	{
 		if (QSim.analyzeRunTimes) runTimes = new long[QNetsimEngineWithThreadpool.numObservedTimeSteps];
@@ -82,7 +83,7 @@ abstract class AbstractQNetsimEngineRunner extends NetElementActivationRegistry 
 		time = t;
 	}
 
-	protected void setNeighbourManager(final NeighbourManager neighbourManager) {
+	protected void setNeighbourManager(final StepSynchronizationService neighbourManager) {
 		this.neighbourManager = neighbourManager;
 	}
 
@@ -127,7 +128,7 @@ abstract class AbstractQNetsimEngineRunner extends NetElementActivationRegistry 
 			remainsActive = link.doSimStep(outGoingVehicles);
 
 			// TODO uncomment
-			neighbourManager.collectCarsFromLane(outGoingVehicles);
+//			neighbourManager.collectCarsFromLane(outGoingVehicles);
 
 			//Checking the neighbourhoods of current worker
 //			Network network;

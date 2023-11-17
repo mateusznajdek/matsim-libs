@@ -33,7 +33,7 @@ public class WorkerStrategyService implements Strategy, Runnable, Subscriber {
 	private final MessageReceiverService messageReceiverService;
 	private final ExecutorService simulationExecutor = newSingleThreadExecutor();
 	public final MyWorkerId myWorkerId;
-	private final NeighbourManager neighbourManager;
+	private final StepSynchronizationService stepSynchronizationService;
 	private final AtomicBoolean shouldRunSim = new AtomicBoolean(false);
 
 	@Inject
@@ -42,13 +42,13 @@ public class WorkerStrategyService implements Strategy, Runnable, Subscriber {
 								 MessageReceiverService messageReceiverService,
 								 ParallelizationConfigGroup configuration,
 								 MyWorkerId myWorkerId,
-								 NeighbourManager neighbourManager) {
+								 StepSynchronizationService stepSynchronizationService) {
 		this.subscriptionService = subscriptionService;
 		this.configuration = configuration;
 		this.messageSenderService = messageSenderService;
 		this.messageReceiverService = messageReceiverService;
 		this.myWorkerId = myWorkerId;
-		this.neighbourManager = neighbourManager;
+		this.stepSynchronizationService = stepSynchronizationService;
 		this.myWorkerId.create();
 		//		init();
 	}
@@ -98,7 +98,7 @@ public class WorkerStrategyService implements Strategy, Runnable, Subscriber {
 
 	private void handleInitializationMessage(ServerInitializationMessage message) {
 		// TODO simulation initialization goes HERE...
-		neighbourManager.setupNeighboursConnections();
+		stepSynchronizationService.setupNeighboursConnections();
 		try {
 			messageSenderService.sendServerMessage(new CompletedInitializationMessage());
 		} catch (IOException e) {

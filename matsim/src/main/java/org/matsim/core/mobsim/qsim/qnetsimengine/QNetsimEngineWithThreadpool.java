@@ -33,6 +33,7 @@ import jakarta.inject.Inject;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 
 /**
  * Coordinates the movement of vehicles on the links and the nodes.
@@ -49,7 +50,7 @@ final class QNetsimEngineWithThreadpool extends AbstractQNetsimEngine<QNetsimEng
 
 	private final int numOfRunners;
 	private final MyWorkerId myWorkerId;
-	private final NeighbourManager neighbourManager;
+	private final StepSynchronizationService neighbourManager;
 	private ExecutorService pool;
 
 //	public QNetsimEngineWithThreadpool(final QSim sim) {
@@ -59,7 +60,7 @@ final class QNetsimEngineWithThreadpool extends AbstractQNetsimEngine<QNetsimEng
 	@Inject QNetsimEngineWithThreadpool(final QSim sim,
 										QNetworkFactory netsimNetworkFactory,
 										MyWorkerId workerId,
-										NeighbourManager neighbourManager) {
+										StepSynchronizationService neighbourManager) {
 		super(sim, netsimNetworkFactory);
 		this.neighbourManager = neighbourManager;
 		this.numOfRunners = this.numOfThreads;

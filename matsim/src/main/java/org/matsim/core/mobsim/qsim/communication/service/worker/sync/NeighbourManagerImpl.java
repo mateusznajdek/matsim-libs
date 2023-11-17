@@ -7,7 +7,6 @@ import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.mobsim.qsim.communication.Connection;
 import org.matsim.core.mobsim.qsim.communication.model.WorkerId;
 import org.matsim.core.mobsim.qsim.communication.model.messages.Message;
-import org.matsim.core.mobsim.qsim.communication.model.messages.SyncStepMessage;
 import org.matsim.core.mobsim.qsim.communication.service.worker.MessageSenderService;
 import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicle;
@@ -15,7 +14,6 @@ import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicle;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 // TODO merge it with messageSenderService???
@@ -31,8 +29,6 @@ public class NeighbourManagerImpl implements NeighbourManager {
 
 	private final MessageSenderService messageSenderService;
 
-	private int tmpStep = 0;
-
 	@Inject
 	public NeighbourManagerImpl(Network network, MyWorkerId myWorkerId,
 								MessageSenderService messageSenderService) {
@@ -43,7 +39,6 @@ public class NeighbourManagerImpl implements NeighbourManager {
 
 	@Override
 	public void collectCarsFromLane(Collection<QVehicle> outGoingVehicles) {
-		// TODO uncomment
 		for (var veh : outGoingVehicles) {
 			var _currLinkId = veh.getDriver().getCurrentLinkId();
 			String partition = String.valueOf(network.getLinks().get(_currLinkId).getAttributes().getAttribute("partition"));
@@ -52,6 +47,7 @@ public class NeighbourManagerImpl implements NeighbourManager {
 			vehiclesToSend.get(partition).add(veh);
 		}
 	}
+
 	private Set<Integer> getMyNeighboursIds() {
 		return network.getLinks().values().stream()
 			.filter(l -> !l.getToNode().getAttributes().getAttribute("partition").equals(l.getFromNode().getAttributes().getAttribute("partition")))
@@ -84,21 +80,14 @@ public class NeighbourManagerImpl implements NeighbourManager {
 //		});
 	}
 
+	// TODO think if implement it this way!
 	@Override
-	public void sendSyncMessageToNeighbours() {
-		SyncStepMessage syncMsg = new SyncStepMessage(myWorkerId.get(), ThreadLocalRandom.current().nextInt(), tmpStep++);
-		sendToNeighbours(syncMsg);
-	}
-
-	private void sendToNeighbours(Message message) {
+	public void sendToNeighbours(Message message) {
 		neighbourRepository.forEach((workerId, connection) -> {
 			try {
 				connection.send(message);
-				LOG.info(Thread.currentThread() + "::: Sending sync " + message.getMessageType() + " to neighbour: "
-					+ workerId.getId() + " with msgId: " + ((SyncStepMessage)message).getWorkerId() +
-					", random: " + ((SyncStepMessage)message).getRandom()
-					+ ", step: " + ((SyncStepMessage)message).getStep());
 			} catch (SocketException e) {
+				LOG.info("Sending " + message.getMessageType() + " to neighbours: " + neighbourRepository.keySet().size());
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();

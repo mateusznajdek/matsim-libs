@@ -466,12 +466,26 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 
 		if (doContinue) {
 			this.simTimer.incrementTime();
+//			//TODO uncomment
+////			log.info("test");
+//			try {
+//				Thread.sleep(100);
+//			} catch (InterruptedException e) {
+//				throw new RuntimeException(e);
+//			}
 			stepSynchronizationService.sendSyncMessageToNeighbours();
 			stepSynchronizationService.getSyncMessages();
 
 			// TODO insert received vehicle
 //			var qlink = (QLinkImpl) this.netEngine.getNetsimNetwork().getNetsimLink(Id.createLinkId(""));
 //			qlink.addDepartingVehicle(null);// pass received vehicles
+		} else {
+			log.info("LAST STEP MAN");
+//			try {
+//				Thread.sleep(5000);
+//			} catch (InterruptedException e) {
+//				throw new RuntimeException(e);
+//			}
 		}
 
 		if (analyzeRunTimes) this.qSimInternalTime += System.nanoTime() - this.startClockTime;

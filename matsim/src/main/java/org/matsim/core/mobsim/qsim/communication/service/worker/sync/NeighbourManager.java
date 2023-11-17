@@ -10,7 +10,7 @@ public interface NeighbourManager {
 
 	void collectCarsFromLane(Collection<QVehicle> outGoingVehicles);
 
-	void sendSyncMessageToNeighbours();
+	void sendToNeighbours(Message message);
 
 	int getNumberOfNeighbours();
 
