@@ -20,6 +20,8 @@
 
 package org.matsim.core.population;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.router.TripStructureUtils;
@@ -28,7 +30,9 @@ import org.matsim.core.utils.misc.Time;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.matsim.utils.objectattributes.attributable.LazyAllocationAttributes;
 
-/* deliberately package */ final class LegImpl implements Leg {
+@Getter
+@Setter
+public final class LegImpl implements Leg {
 
 	private static final double UNDEFINED_TIME = Double.NEGATIVE_INFINITY;
 
@@ -41,7 +45,7 @@ import org.matsim.utils.objectattributes.attributable.LazyAllocationAttributes;
 
 	private Attributes attributes = null;
 
-	/* deliberately package */ LegImpl(final String transportMode) {
+	public LegImpl(final String transportMode) {
 		this.mode = transportMode;
 	}
 

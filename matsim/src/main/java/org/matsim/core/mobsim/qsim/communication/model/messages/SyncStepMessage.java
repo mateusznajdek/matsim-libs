@@ -3,15 +3,18 @@ package org.matsim.core.mobsim.qsim.communication.model.messages;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.matsim.core.mobsim.qsim.communication.model.MessagesTypeEnum;
+import org.matsim.core.mobsim.qsim.communication.model.matisim.SerializedQVehicle;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
 public class SyncStepMessage implements Message, Comparable<SyncStepMessage> {
 
-	//  private final List<SerializedCar> cars;
-	String workerId;
+	String fromWorkerId;
 	int random;
 	int step;
+	private final List<SerializedQVehicle> vehicles;
 
 	@Override
 	public MessagesTypeEnum getMessageType() {
@@ -26,7 +29,7 @@ public class SyncStepMessage implements Message, Comparable<SyncStepMessage> {
 	@Override
 	public String toString() {
 		return "SyncStepMessage{" +
-			"workerId='" + workerId + '\'' +
+			"workerId='" + fromWorkerId + '\'' +
 			", random=" + random +
 			", step=" + step +
 			'}';

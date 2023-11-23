@@ -21,7 +21,6 @@
 package org.matsim.core.mobsim.qsim.qnetsimengine;
 
 import org.matsim.core.mobsim.qsim.QSim;
-import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
 import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 
 import java.util.*;
@@ -119,35 +118,15 @@ abstract class AbstractQNetsimEngineRunner extends NetElementActivationRegistry 
 		lockLinks = true;
 		QLinkI link;
 		ListIterator<QLinkI> simLinks = this.linksList.listIterator();
+
 		Collection<QVehicle> outGoingVehicles = new ArrayList<>();
 		while (simLinks.hasNext()) {
 			link = simLinks.next();
 
-//			remainsActive = link.doSimStep();
-//			System.out.println("LINK::: workerID: " + myWorkerId + "  partition: " + link.getLink().getAttributes().getAttribute("partition"));
+			outGoingVehicles.clear();
 			remainsActive = link.doSimStep(outGoingVehicles);
 
-			// TODO uncomment
-//			neighbourManager.collectCarsFromLane(outGoingVehicles);
-
-			//Checking the neighbourhoods of current worker
-//			Network network;
-//			var rank = 1;
-//			var neighborRanks = network.getLinks().values().stream()
-//				.filter(l -> l.getFromNode().getAttributes().getAttribute("partition").equals(rank) ||
-//					l.getToNode().getAttributes().getAttribute("partition").equals(rank))
-//				.filter(l -> !l.getToNode().getAttributes().getAttribute("partition").equals(l.getFromNode().getAttributes().getAttribute("partition")))
-//				.map(l -> {
-//					if (!l.getToNode().getAttributes().getAttribute("partition").equals(rank)){
-//						return (Integer) l.getToNode().getAttributes().getAttribute("partition");
-//					}
-//					else if (l.getFromNode().getAttributes().getAttribute("partition").equals(rank)){
-//						return (Integer) l.getFromNode().getAttributes().getAttribute("partition");
-//					}
-//					else throw new RuntimeException("Whole world is destroyed!");
-//				})
-//				.collect(Collectors.toSet());
-
+			neighbourManager.collectCarsFromLane(outGoingVehicles);
 
 			// TODO I think we also need to disable (deactivate?) the split link
 			//  on worker from which we send the sync message
@@ -159,58 +138,58 @@ abstract class AbstractQNetsimEngineRunner extends NetElementActivationRegistry 
 //				System.out.println("SKIPPING LINK: " + link.getLink().getId());
 //			}
 
-				if (!remainsActive) simLinks.remove();
-			}
-			lockLinks = false;
+			if (!remainsActive) simLinks.remove();
 		}
+		lockLinks = false;
+	}
 
-		/*
-		 * This method is only called while links are NOT "moved", i.e. their
-		 * doStimStep(...) methods are called. To ensure that, we  use a boolean lock.
-		 * cdobler, sep'14
-		 */
-		@Override
-		protected final void registerLinkAsActive (QLinkI link){
-			if (!lockLinks) linksList.add(link);
-			else throw new RuntimeException("Tried to activate a QLink at a time where this was not allowed. Aborting!");
-		}
+	/*
+	 * This method is only called while links are NOT "moved", i.e. their
+	 * doStimStep(...) methods are called. To ensure that, we  use a boolean lock.
+	 * cdobler, sep'14
+	 */
+	@Override
+	protected final void registerLinkAsActive(QLinkI link) {
+		if (!lockLinks) linksList.add(link);
+		else throw new RuntimeException("Tried to activate a QLink at a time where this was not allowed. Aborting!");
+	}
 
-		@Override
-		public final int getNumberOfSimulatedLinks () {
-			return this.linksList.size();
-		}
+	@Override
+	public final int getNumberOfSimulatedLinks() {
+		return this.linksList.size();
+	}
 
-		/*
-		 * This method is only called while nodes are NOT "moved", i.e. their
-		 * doStimStep(...) methods are called. To ensure that, we  use a boolean lock.
-		 * cdobler, sep'14
-		 */
-		@Override
-		protected final void registerNodeAsActive (QNodeI node){
-			if (!this.lockNodes) this.nodesQueue.add(node);
-			else throw new RuntimeException("Tried to activate a QNode at a time where this was not allowed. Aborting!");
-		}
+	/*
+	 * This method is only called while nodes are NOT "moved", i.e. their
+	 * doStimStep(...) methods are called. To ensure that, we  use a boolean lock.
+	 * cdobler, sep'14
+	 */
+	@Override
+	protected final void registerNodeAsActive(QNodeI node) {
+		if (!this.lockNodes) this.nodesQueue.add(node);
+		else throw new RuntimeException("Tried to activate a QNode at a time where this was not allowed. Aborting!");
+	}
 
-		/*
-		 * Note that the size() method is O(n) for a ConcurrentLinkedQueue as used
-		 * for the nodesQueue. However, this method is only called once every simulated
-		 * hour for the log message. Therefore, it should be okay.
-		 * cdobler, sep'14
-		 */
-		@Override
-		public final int getNumberOfSimulatedNodes () {
-			return this.nodesQueue.size();
-		}
+	/*
+	 * Note that the size() method is O(n) for a ConcurrentLinkedQueue as used
+	 * for the nodesQueue. However, this method is only called once every simulated
+	 * hour for the log message. Therefore, it should be okay.
+	 * cdobler, sep'14
+	 */
+	@Override
+	public final int getNumberOfSimulatedNodes() {
+		return this.nodesQueue.size();
+	}
 
-		protected final void startMeasure () {
-			if (QSim.analyzeRunTimes) this.startTime = System.nanoTime();
-		}
+	protected final void startMeasure() {
+		if (QSim.analyzeRunTimes) this.startTime = System.nanoTime();
+	}
 
-		protected final void endMeasure () {
-			if (QSim.analyzeRunTimes) {
-				long end = System.nanoTime();
-				int bin = (int) this.time;
-				if (bin < this.runTimes.length) this.runTimes[bin] = end - this.startTime;
-			}
+	protected final void endMeasure() {
+		if (QSim.analyzeRunTimes) {
+			long end = System.nanoTime();
+			int bin = (int) this.time;
+			if (bin < this.runTimes.length) this.runTimes[bin] = end - this.startTime;
 		}
 	}
+}

@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Customizable;
@@ -39,7 +41,9 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 /**
  * Default implementation of {@link Person} interface.
  */
-/* deliberately package */ final class PersonImpl implements Person, Lockable {
+@Getter
+@Setter
+/* deliberately package */ public final class PersonImpl implements Person, Lockable {
 
 	private List<Plan> plans = new ArrayList<>(6);
 	private Id<Person> id;
@@ -51,7 +55,7 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 
 	private final Attributes attributes = new AttributesImpl();
 
-	/* deliberately package */ PersonImpl(final Id<Person> id) {
+	public PersonImpl(final Id<Person> id) {
 		this.id = id;
 	}
 
@@ -96,7 +100,7 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 
 	/* deliberately package */ void changeId(final Id<Person> newId) {
 		// This is deliberately non-public and not on the interface, since the ID should not be changed after the
-		// person is inserted into the population map (since the ID is the map key).  
+		// person is inserted into the population map (since the ID is the map key).
 		// However, there are some situations where changing the ID makes sense while the person is outside
 		// the population ...  kai, jun'16
 		try {

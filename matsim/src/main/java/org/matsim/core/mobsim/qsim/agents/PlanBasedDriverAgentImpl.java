@@ -20,6 +20,8 @@ package org.matsim.core.mobsim.qsim.agents;
 
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
@@ -37,6 +39,8 @@ import com.google.common.base.MoreObjects;
 /**
  * @author nagel
  */
+@Getter
+@Setter
 public final class PlanBasedDriverAgentImpl implements DriverAgent {
 
 	private static final Logger log = LogManager.getLogger(PlanBasedDriverAgentImpl.class);
@@ -82,7 +86,7 @@ public final class PlanBasedDriverAgentImpl implements DriverAgent {
 		// and removed material as they needed it for their own studies.  Making the whole code more consistent would be highly
 		// desirable.  kai, nov'14
 
-		// (1) if there is a cached link id, use that one: 
+		// (1) if there is a cached link id, use that one:
 		if (this.cachedNextLinkId != null && !(this.cachedNextLinkId.equals(this.getCurrentLinkId())) ) {
 			// cachedNextLinkId used to be set to null when a leg started.  Now the BasicPlanAgentImpl does not longer have access to cached
 			// value.  kai, nov'14
@@ -145,7 +149,7 @@ public final class PlanBasedDriverAgentImpl implements DriverAgent {
 
 		//		Link currentLink = this.getScenario().getNetwork().getLinks().get( this.getCurrentLinkId() ) ;
 //		Link destinationLink = this.getScenario().getNetwork().getLinks().get( this.getDestinationLinkId() ) ;
-//			
+//
 //		if ( this.currentLinkIndex >= routeLinkIdsSize ) { // route has run dry
 //			if ( currentLink.getToNode() == destinationLink.getFromNode() ) { // will arrive on next link
 //				return false ;
@@ -157,9 +161,9 @@ public final class PlanBasedDriverAgentImpl implements DriverAgent {
 //		}
 
 		//		Link nextLink = this.getScenario().getNetwork().getLinks().get( routeLinkIds.get(this.getCurrentLinkIndex()) ) ;
-//		
+//
 //		if ( currentLink.getToNode() != nextLink.getFromNode() ) {
-//			log.error("route is inconsistent.  In consequence, vehicle has no chance to continue correctly." +  
+//			log.error("route is inconsistent.  In consequence, vehicle has no chance to continue correctly." +
 //					"Make it arrive here rather than explode it at the intersection." ) ;
 //			return true ;
 //		}
@@ -195,8 +199,8 @@ public final class PlanBasedDriverAgentImpl implements DriverAgent {
 				log.error("The agent " + this.getId() + " has no route in its leg. Setting agent state to abort." );
 				this.basicPlanAgentDelegate.setState(MobsimAgent.State.ABORT) ;
 			}
-		} 
-//		else {			
+		}
+//		else {
 //			this.basicPlanAgentDelegate.calculateAndSetDepartureTime((Activity) this.basicPlanAgentDelegate.getCurrentPlanElement());
 //		}
 		this.basicPlanAgentDelegate.resetCaches();

@@ -1,6 +1,8 @@
 import com.google.inject.Singleton;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.mobsim.qsim.communication.model.WorkerId;
+import org.matsim.core.mobsim.qsim.communication.model.matisim.DeserializeUtil;
+import org.matsim.core.mobsim.qsim.communication.model.matisim.World;
 import org.matsim.core.mobsim.qsim.communication.service.server.*;
 import org.matsim.core.mobsim.qsim.communication.service.worker.MessageReceiverService;
 import org.matsim.core.mobsim.qsim.communication.service.worker.MessageSenderService;
@@ -26,6 +28,8 @@ public class ParallelizationModule extends AbstractModule {
 		bind(MessageSenderServerService.class).in(Singleton.class);
 		bind(WorkerRepository.class).in(Singleton.class);
 		bind(ConnectionInitializationService.class).in(Singleton.class);
+		bind(DeserializeUtil.class).in(Singleton.class);
+		bind(World.class).in(Singleton.class);
 		bind(MessagePropagationService.class).to(SubscriptionServiceImpl.class).in(Singleton.class);
 		bind(StepSynchronizationService.class).to(StepSynchronizationServiceImpl.class).in(Singleton.class);
 		bind(WorkerSynchronisationService.class).to(WorkerSynchronisationMessageImpl.class).in(Singleton.class);

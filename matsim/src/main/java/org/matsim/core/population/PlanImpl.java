@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Customizable;
@@ -35,8 +36,8 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.scenario.CustomizableUtils;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.matsim.utils.objectattributes.attributable.AttributesImpl;
-
-/* deliberately package */  final class PlanImpl implements Plan {
+@Setter
+/* deliberately package */  public final class PlanImpl implements Plan {
 
 	private ArrayList<PlanElement> actsLegs = new ArrayList<>();
 
@@ -49,15 +50,15 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 	private final static Logger log = LogManager.getLogger(Plan.class);
 
 	private Customizable customizableDelegate;
-	
+
 	private final Attributes attributes = new AttributesImpl();
-	
+
 	@Override
 	public final Attributes getAttributes() {
 		return this.attributes;
 	}
 
-	/* package */ PlanImpl() {}
+	public PlanImpl() {}
 
 //	@Override
 //	public final Activity createAndAddActivity(final String type1) {
@@ -68,7 +69,7 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 //		return a;
 //	}
 
-	
+
 
 	//////////////////////////////////////////////////////////////////////
 	// create methods
@@ -167,7 +168,7 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 //	public final void setLocked() {
 //		for ( PlanElement pe : this.actsLegs ) {
 //			if ( pe instanceof ActivityImpl ) {
-//				((ActivityImpl) pe).setLocked(); 
+//				((ActivityImpl) pe).setLocked();
 //			} else if ( pe instanceof LegImpl ) {
 //				((LegImpl) pe).setLocked() ;
 //			}

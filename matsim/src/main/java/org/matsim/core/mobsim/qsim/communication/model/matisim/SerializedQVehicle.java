@@ -3,29 +3,25 @@ package org.matsim.core.mobsim.qsim.communication.model.matisim;
 import lombok.Getter;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
-import org.matsim.core.mobsim.framework.DriverAgent;
-import org.matsim.core.mobsim.framework.PassengerAgent;
-import org.matsim.core.mobsim.qsim.communication.model.serializable.CustomSerializable;
-import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
+import org.matsim.core.mobsim.qsim.agents.PersonDriverAgentImpl;
+import org.matsim.core.mobsim.qsim.communication.model.serializable.CustomMatSimSerializable;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicle;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicleImpl;
-import org.matsim.vehicles.Vehicle;
 
-import java.util.Collection;
-
-public class SerializedQVehicle implements CustomSerializable<QVehicleImpl> {
+public class SerializedQVehicle implements CustomMatSimSerializable<QVehicleImpl, World> {
 
 	private static int warnCount = 0;
 
-	private double linkEnterTime = 0. ;
+	private double linkEnterTime = 0.;
 	private double earliestLinkExitTime = 0;
-	private DriverAgent driver = null;
-	private Collection<PassengerAgent> passengers = null;
-	private final String /**Id<Vehicle>**/ vehicleId;
+	private SerializedDriver driver = null;
+	// redundant - vehicle already contains this info
+	private final String /**Id<Vehicle>**/
+		vehicleId;
 	@Getter
-	private final String /**Id<Link>**/ currentLinkId;
+	private final String /**Id<Link>**/
+		currentLinkId;
 	private final SerializedVehicle vehicle;
-	private final int passengerCapacity = 4; // Don't care for now
 
 	public SerializedQVehicle(QVehicle qvehicle) {
 		this.earliestLinkExitTime = qvehicle.getEarliestLinkExitTime();
@@ -33,16 +29,21 @@ public class SerializedQVehicle implements CustomSerializable<QVehicleImpl> {
 		this.vehicleId = qvehicle.getId().toString();
 		this.currentLinkId = qvehicle.getCurrentLink().getId().toString();
 		this.vehicle = new SerializedVehicle(qvehicle.getVehicle());
+		if ((PersonDriverAgentImpl) qvehicle.getDriver() == null)
+			throw new RuntimeException("Auuuuc");
+		this.driver = new SerializedDriver((PersonDriverAgentImpl) qvehicle.getDriver());
 	}
 
-
 	@Override
-	public QVehicleImpl toRealObject() {
+	public QVehicleImpl toRealObject(World world) {
 		// NOTE: this is not fully populated at this point
 		// please refer to DeserializeVehicleUtil
 		QVehicleImpl qVehicle = new QVehicleImpl(vehicle.toRealObject());
 		qVehicle.setLinkEnterTime(this.linkEnterTime);
 		qVehicle.setEarliestLinkExitTime(this.earliestLinkExitTime);
+		qVehicle.setDriver(this.driver.toRealObject(world));
+		Link currentLinkForVehicle = world.getLinks().get(Id.createLinkId(currentLinkId));
+		qVehicle.setCurrentLink(currentLinkForVehicle);
 		return qVehicle;
 	}
 

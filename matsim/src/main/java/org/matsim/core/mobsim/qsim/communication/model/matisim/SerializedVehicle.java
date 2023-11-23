@@ -8,9 +8,11 @@ import org.matsim.vehicles.VehicleImpl;
 import org.matsim.vehicles.VehicleUtils;
 
 public class SerializedVehicle implements CustomSerializable<VehicleImpl> {
-
+	//	NOTE: NOT USED - can be poplated with default value
 	//	private VehicleType type;
 	private final String /**Id<Vehicle>**/ id;
+
+//	NOTE: THIS I don't know if necessary
 //	private Attributes attributes;
 
 	public SerializedVehicle(Vehicle vehicle) {

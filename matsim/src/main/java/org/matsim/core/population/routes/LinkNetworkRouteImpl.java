@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.network.NetworkUtils;
@@ -34,10 +36,12 @@ import org.matsim.vehicles.Vehicle;
  *
  * @author mrieser
  */
-final class LinkNetworkRouteImpl extends AbstractRoute implements NetworkRoute {
+@Getter
+@Setter
+public final class LinkNetworkRouteImpl extends AbstractRoute implements NetworkRoute {
 
 	/*package*/ final static String ROUTE_TYPE = "links";
-	
+
 	private ArrayList<Id<Link>> route = new ArrayList<>();
 	private List<Id<Link>> safeRoute = Collections.unmodifiableList(this.route);
 	private double travelCost = Double.NaN;
@@ -46,12 +50,12 @@ final class LinkNetworkRouteImpl extends AbstractRoute implements NetworkRoute {
 	LinkNetworkRouteImpl(final Id<Link> startLinkId, final Id<Link> endLinkId) {
 		super(startLinkId, endLinkId);
 	}
-	
-	LinkNetworkRouteImpl(final Id<Link> startLinkId, final List<Id<Link>> linkIds, final Id<Link> endLinkId) {
+
+	public LinkNetworkRouteImpl(final Id<Link> startLinkId, final List<Id<Link>> linkIds, final Id<Link> endLinkId) {
 		super(startLinkId, endLinkId);
 		setLinkIds(startLinkId, linkIds, endLinkId);
 	}
-	
+
 	LinkNetworkRouteImpl(final Id<Link> startLinkId, final Id<Link>[] linkIds, final Id<Link> endLinkId) {
 		super(startLinkId, endLinkId);
         Collections.addAll(this.route, linkIds);
@@ -167,14 +171,14 @@ final class LinkNetworkRouteImpl extends AbstractRoute implements NetworkRoute {
 			desc.append(" ");
 			desc.append(linkId.toString());
 		}
-		// If the start links equals the end link additionally check if its is a round trip. 
+		// If the start links equals the end link additionally check if its is a round trip.
 		if (!this.getEndLinkId().equals(this.getStartLinkId()) || this.getLinkIds().size() > 0) {
 			desc.append(" ");
 			desc.append(this.getEndLinkId().toString());
 		}
 		return desc.toString();
 	}
-	
+
 	@Override
 	public void setRouteDescription(String routeDescription) {
 		List<Id<Link>> linkIds = NetworkUtils.getLinkIds(routeDescription);
@@ -190,12 +194,12 @@ final class LinkNetworkRouteImpl extends AbstractRoute implements NetworkRoute {
 		}
 		this.setLinkIds(startLinkId, linkIds, endLinkId);
 	}
-	
+
 	@Override
 	public String getRouteType() {
 		return ROUTE_TYPE;
 	}
-	
+
 	@Override
 	public String toString() {
 		String str = super.toString();

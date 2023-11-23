@@ -38,7 +38,7 @@ public class IncomingMessageBuffer {
 	}
 
 	public synchronized void give(SyncStepMessage syncStepMessage) {
-		LOG.debug(Thread.currentThread() + "::: SyncStepMessage from w: " + syncStepMessage.getWorkerId() +
+		LOG.debug(Thread.currentThread() + "::: SyncStepMessage from w: " + syncStepMessage.getFromWorkerId() +
 			", random: " + syncStepMessage.getRandom()
 			+ ", step: " + syncStepMessage.getStep()
 			+ ", incomingMessages: " + incomingMessages.size()
@@ -47,7 +47,6 @@ public class IncomingMessageBuffer {
 			futureIncomingMessages.add(syncStepMessage);
 		} else if (syncStepMessage.getStep() == currentStep) {
 			incomingMessages.add(syncStepMessage);
-			// notifyAll();
 		} else {
 			throw new RuntimeException("Received timestep from the past - impossible");
 		}

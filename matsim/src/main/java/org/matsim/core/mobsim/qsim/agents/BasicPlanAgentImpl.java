@@ -25,6 +25,8 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
@@ -58,13 +60,15 @@ import org.matsim.vehicles.Vehicle;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 
+@Getter
+@Setter
 public final class BasicPlanAgentImpl implements MobsimAgent, PlanAgent, HasPerson, VehicleUsingAgent, HasModifiablePlan {
 
 	private static final Logger log = LogManager.getLogger(BasicPlanAgentImpl.class);
-	private static int finalActHasDpTimeWrnCnt = 0;
-	private static int noRouteWrnCnt = 0;
+	public static int finalActHasDpTimeWrnCnt = 0;
+	public static int noRouteWrnCnt = 0;
 
-	private int currentPlanElementIndex = 0;  // 
+	private int currentPlanElementIndex = 0;  //
 	private Plan plan;  //
 	private boolean firstTimeToGetModifiablePlan = true;  //
 	private final Scenario scenario;
@@ -305,7 +309,7 @@ public final class BasicPlanAgentImpl implements MobsimAgent, PlanAgent, HasPers
 		}
 	}
 
-	/* default */ final int getCurrentPlanElementIndex() {
+	public/* default */ final int getCurrentPlanElementIndex() {
 		// Should this be made public?
 		// Pro: Many programmers urgently seem to need this: They do everything possible to get to this index, including copy/paste of the whole class.
 		// Con: I don't think that it is needed in many of those cases with a bit of thinking, and without it it really makes the code more flexible including
@@ -353,7 +357,7 @@ public final class BasicPlanAgentImpl implements MobsimAgent, PlanAgent, HasPers
 		return this.currentLinkId;
 	}
 
-	/* package */ final void setCurrentLinkId(@NotNull Id<Link> linkId ) {
+	public void setCurrentLinkId(@NotNull Id<Link> linkId ) {
 		this.currentLinkId = Preconditions.checkNotNull(linkId);
 	}
 
@@ -370,7 +374,7 @@ public final class BasicPlanAgentImpl implements MobsimAgent, PlanAgent, HasPers
 		return state;
 	}
 
-	final void setState(MobsimAgent.State state) {
+	public void setState(MobsimAgent.State state) {
 		this.state = state;
 	}
 

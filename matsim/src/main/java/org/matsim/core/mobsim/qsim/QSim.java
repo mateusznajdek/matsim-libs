@@ -44,7 +44,6 @@ import org.matsim.core.mobsim.framework.MobsimTimer;
 import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.framework.listeners.MobsimListener;
 import org.matsim.core.mobsim.qsim.changeeventsengine.NetworkChangeEventsEngineI;
-import org.matsim.core.mobsim.qsim.communication.model.messages.FinishSimulationMessage;
 import org.matsim.core.mobsim.qsim.communication.service.worker.WorkerSubscriptionService;
 import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 import org.matsim.core.mobsim.qsim.communication.startingup.StrategySelectionService;
@@ -52,7 +51,6 @@ import org.matsim.core.mobsim.qsim.communication.startingup.WorkerStrategyServic
 import org.matsim.core.mobsim.qsim.interfaces.AgentCounter;
 import org.matsim.core.mobsim.qsim.interfaces.*;
 import org.matsim.core.mobsim.qsim.qnetsimengine.NetsimEngine;
-import org.matsim.core.mobsim.qsim.qnetsimengine.QLinkImpl;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngineI;
 import org.matsim.core.network.NetworkChangeEvent;
 import org.matsim.core.population.PopulationUtils;
@@ -243,6 +241,9 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 
 		this.strategySelectionService = strategySelectionService;
 		this.stepSynchronizationService = stepSynchronizationService;
+		// dirty, but it is PoC...
+		this.stepSynchronizationService.setNetsim(this);
+		this.stepSynchronizationService.setMobsimTimer(simTimer);
 //		this.qVehicleFactory = qVehicleFactory;
 	}
 

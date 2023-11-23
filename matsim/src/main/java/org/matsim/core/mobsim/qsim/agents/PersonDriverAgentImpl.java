@@ -20,6 +20,8 @@
 
 package org.matsim.core.mobsim.qsim.agents;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
@@ -44,6 +46,8 @@ import org.matsim.vehicles.Vehicle;
  * <p></p>
  * I think this class is reasonable in terms of what is public and/or final and what not.
  */
+@Getter
+@Setter
 public class PersonDriverAgentImpl implements MobsimDriverAgent, MobsimPassengerAgent, HasPerson, PlanAgent, HasModifiablePlan {
 	// yy cannot make this final since it is overridden at 65 locations
 	// (but since all methods are final, it seems that all of these could be solved by delegation).
@@ -51,15 +55,15 @@ public class PersonDriverAgentImpl implements MobsimDriverAgent, MobsimPassenger
 
 	@SuppressWarnings("unused")
 	private static final Logger log = LogManager.getLogger(PersonDriverAgentImpl.class);
-	
+
 	private BasicPlanAgentImpl basicAgentDelegate ;
 	private PlanBasedDriverAgentImpl driverAgentDelegate ;
 
 	public PersonDriverAgentImpl(final Plan plan1, final Netsim simulation, final TimeInterpretation timeInterpretation) {
-		basicAgentDelegate = new BasicPlanAgentImpl(plan1, simulation.getScenario(), simulation.getEventsManager(), 
+		basicAgentDelegate = new BasicPlanAgentImpl(plan1, simulation.getScenario(), simulation.getEventsManager(),
 				simulation.getSimTimer(), timeInterpretation ) ;
 		driverAgentDelegate = new PlanBasedDriverAgentImpl(basicAgentDelegate) ;
-		
+
 		// deliberately does NOT keep a back pointer to the whole Netsim; this should also be removed in the constructor call.
 	}
 
@@ -177,7 +181,7 @@ public class PersonDriverAgentImpl implements MobsimDriverAgent, MobsimPassenger
 	public final boolean isWantingToArriveOnCurrentLink() {
 		return driverAgentDelegate.isWantingToArriveOnCurrentLink();
 	}
-	
+
 	final Leg getCurrentLeg() {
 		return basicAgentDelegate.getCurrentLeg() ;
 	}
@@ -197,7 +201,7 @@ public class PersonDriverAgentImpl implements MobsimDriverAgent, MobsimPassenger
 //	}
 	@Override public final void resetCaches() {
 		basicAgentDelegate.resetCaches();
-		driverAgentDelegate.resetCaches(); 
+		driverAgentDelegate.resetCaches();
 	}
 
 	@Override

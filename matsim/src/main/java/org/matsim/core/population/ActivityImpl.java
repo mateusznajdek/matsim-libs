@@ -20,6 +20,8 @@
 
 package org.matsim.core.population;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
@@ -38,7 +40,9 @@ import org.matsim.utils.objectattributes.attributable.LazyAllocationAttributes;
  * </ul>
  *
  */
-/* package */ final class ActivityImpl implements Activity {
+@Getter
+@Setter
+public final class ActivityImpl implements Activity {
 	// Assume this as input to iterations.  Cases:
 	// Case (0): comes with coord and linkId.  No problem.
 	// Case (1): comes with linkId but w/o coord.  Coord is (presumably) set in prepareForIterations.
@@ -63,8 +67,8 @@ import org.matsim.utils.objectattributes.attributable.LazyAllocationAttributes;
 	private Id<ActivityFacility> facilityId = null;
 
 	private Attributes attributes = null;
-	
-	/*package*/ ActivityImpl(final String type) {
+
+	public ActivityImpl(final String type) {
 		this.type = type.intern();
 	}
 

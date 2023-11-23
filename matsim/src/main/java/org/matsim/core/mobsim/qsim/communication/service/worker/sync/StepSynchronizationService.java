@@ -1,6 +1,7 @@
 package org.matsim.core.mobsim.qsim.communication.service.worker.sync;
 
-import org.matsim.core.mobsim.qsim.communication.model.messages.Message;
+import org.matsim.core.mobsim.framework.MobsimTimer;
+import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicle;
 
 import java.util.Collection;
@@ -15,10 +16,11 @@ public interface StepSynchronizationService {
 
 	void collectCarsFromLane(Collection<QVehicle> outGoingVehicles);
 
-//	void sendToNeighbours(Message message);
-
 	int getNumberOfNeighbours();
 
 	void setupNeighboursConnections();
 
+	void setNetsim(Netsim simulation);
+
+	void setMobsimTimer(MobsimTimer mobsimTimer);
 }
