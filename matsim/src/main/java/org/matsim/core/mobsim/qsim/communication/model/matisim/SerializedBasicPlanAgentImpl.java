@@ -47,9 +47,8 @@ public class SerializedBasicPlanAgentImpl implements CustomMatSimSerializable<Ba
 		);
 		BasicPlanAgentImpl.finalActHasDpTimeWrnCnt = finalActHasDpTimeWrnCnt;
 		BasicPlanAgentImpl.noRouteWrnCnt = noRouteWrnCnt;
-		basicPlanAgent.setCurrentPlanElementIndex(currentPlanElementIndex);
 		basicPlanAgent.setFirstTimeToGetModifiablePlan(firstTimeToGetModifiablePlan);
-		basicPlanAgent.setActivityEndTime(activityEndTime);
+		basicPlanAgent.setCurrentLinkId(Id.createLinkId(currentLinkId));
 		MobsimAgent.State stateTmp;
 		if (state.equals("LEG"))
 			stateTmp = MobsimAgent.State.LEG;
@@ -58,7 +57,8 @@ public class SerializedBasicPlanAgentImpl implements CustomMatSimSerializable<Ba
 		else
 			stateTmp = MobsimAgent.State.ABORT;
 		basicPlanAgent.setState(stateTmp);
-		basicPlanAgent.setCurrentLinkId(Id.createLinkId(currentLinkId));
+		basicPlanAgent.setCurrentPlanElementIndex(currentPlanElementIndex);
+		basicPlanAgent.setActivityEndTime(activityEndTime);
 		return basicPlanAgent;
 	}
 }

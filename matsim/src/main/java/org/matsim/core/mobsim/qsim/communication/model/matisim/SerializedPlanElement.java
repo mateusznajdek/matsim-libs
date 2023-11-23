@@ -57,8 +57,8 @@ public class SerializedPlanElement implements CustomSerializable<PlanElement> {
 		if (this.implementationType.equals("LEG")) {
 			LegImpl leg = new LegImpl(this.leg_mode);
 			leg.setRoutingMode(this.leg_routingMode);
-			leg.setDepartureTime(this.leg_depTime);
-			leg.setTravelTime(this.leg_travTime);
+			leg.setDepTime(this.leg_depTime);
+			leg.setTravTime(this.leg_travTime);
 			leg.setRoute(this.route.toRealObject());
 			return leg;
 		} else if (this.implementationType.equals("ACTIVITY")) {
