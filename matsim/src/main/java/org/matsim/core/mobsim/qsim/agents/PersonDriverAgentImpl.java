@@ -66,6 +66,10 @@ public class PersonDriverAgentImpl implements MobsimDriverAgent, MobsimPassenger
 
 		// deliberately does NOT keep a back pointer to the whole Netsim; this should also be removed in the constructor call.
 	}
+	public PersonDriverAgentImpl(BasicPlanAgentImpl basicAgentDelegate) {
+		this.basicAgentDelegate = basicAgentDelegate;
+		driverAgentDelegate = new PlanBasedDriverAgentImpl(basicAgentDelegate) ;
+	}
 
 	@Override
 	public final void endLegAndComputeNextState(double now) {

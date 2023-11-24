@@ -81,6 +81,14 @@ public final class ActivityImpl implements Activity {
 		return asOptionalTime(this.endTime);
 	}
 
+	public double getRawEndTime() {
+		return this.endTime;
+	}
+
+	public double getRawStartTime() {
+		return this.startTime;
+	}
+
 	@Override
 	public void setEndTime(final double endTime) {
 		OptionalTime.assertDefined(endTime);
@@ -107,6 +115,13 @@ public final class ActivityImpl implements Activity {
 	public void setStartTime(final double startTime) {
 		OptionalTime.assertDefined(startTime);
 		this.startTime = startTime;
+	}
+
+	public void setRawStartTime(final double startTime) {
+		this.startTime = startTime;
+	}
+	public void setRawEndTime(final double endTime) {
+		this.endTime = endTime;
 	}
 
 	public void setStartTimeUndefined() {
