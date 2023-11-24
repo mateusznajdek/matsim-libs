@@ -20,6 +20,8 @@
 
 package org.matsim.api.core.v01;
 
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -32,6 +34,7 @@ import java.io.Serializable;
  *   (0/0) ---->
  * }
  */
+@ToString
 public final class Coord implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -47,17 +50,17 @@ public final class Coord implements Serializable {
 	 * </p>
 	 * Without the constructor, the default values are ignored and the non-existing z-coordinate is initialized with the JAVA default of 0.0.
 	 * {@linkplain Double}s would be initialized with {@code null}. This could also better indicate that there is indeed no information on the z-coordinate. However, memory consumption goes up.
-	 * AN, 09/2016 
+	 * AN, 09/2016
 	 */
 	public Coord() {
 	}
-	
+
 	public Coord(final double x, final double y) {
 		this.x = x;
 		this.y = y;
 		this.z = Double.NEGATIVE_INFINITY;
 	}
-	
+
 	public Coord( double[] coord ) {
 		this() ;
 		switch ( coord.length ) {
@@ -70,27 +73,27 @@ public final class Coord implements Serializable {
 				throw new RuntimeException( "double[] of wrong length; cannot be interpreted as coordinate ") ;
 		}
 	}
-	
-	
+
+
 	public Coord(final double x, final double y, final double z){
 		if(z == Double.NEGATIVE_INFINITY){
-			throw new IllegalArgumentException("Double.NEGATIVE_INFINITY is an invalid elevation. " + 
+			throw new IllegalArgumentException("Double.NEGATIVE_INFINITY is an invalid elevation. " +
 					"If you want to ignore elevation, use Coord(x, y) constructor instead.");
 		}
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
-	
+
 
 	public double getX() {
 		return this.x;
 	}
-	
+
 	public double getY() {
 		return this.y;
 	}
-	
+
 	public double getZ() throws IllegalStateException {
 		if ( !hasZ() ){
 			throw new IllegalStateException("Requesting elevation (z) without having first set it.");
@@ -109,7 +112,7 @@ public final class Coord implements Serializable {
 			return false;
 		}
 		Coord o = (Coord)other;
-		
+
 		if( !hasZ() ){
 			/* this object is a 2D coordinate. */
 
@@ -131,7 +134,7 @@ public final class Coord implements Serializable {
 		}
 	}
 
-	
+
 	@Override
 	public int hashCode() {
 		// Implementation based on chapter 3 of Joshua Bloch's "Effective Java"
@@ -144,7 +147,7 @@ public final class Coord implements Serializable {
 		return result;
 	}
 
-	
+
 	@Override
 	public final String toString() {
 		if( !hasZ() ){

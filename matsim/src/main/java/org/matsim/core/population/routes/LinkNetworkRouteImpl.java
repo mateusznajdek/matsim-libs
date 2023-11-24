@@ -26,6 +26,7 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.network.NetworkUtils;
@@ -38,6 +39,7 @@ import org.matsim.vehicles.Vehicle;
  */
 @Getter
 @Setter
+@ToString
 public final class LinkNetworkRouteImpl extends AbstractRoute implements NetworkRoute {
 
 	/*package*/ final static String ROUTE_TYPE = "links";
@@ -200,11 +202,4 @@ public final class LinkNetworkRouteImpl extends AbstractRoute implements Network
 		return ROUTE_TYPE;
 	}
 
-	@Override
-	public String toString() {
-		String str = super.toString();
-		str += " linkIds=" + this.getLinkIds() ;
-		str += " travelCost=" + this.getTravelCost() ;
-		return str ;
-	}
 }

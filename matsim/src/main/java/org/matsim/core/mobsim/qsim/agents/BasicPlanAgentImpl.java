@@ -27,6 +27,7 @@ import jakarta.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
@@ -62,6 +63,7 @@ import com.google.common.base.Preconditions;
 
 @Getter
 @Setter
+@ToString
 public final class BasicPlanAgentImpl implements MobsimAgent, PlanAgent, HasPerson, VehicleUsingAgent, HasModifiablePlan {
 
 	private static final Logger log = LogManager.getLogger(BasicPlanAgentImpl.class);
@@ -422,14 +424,4 @@ public final class BasicPlanAgentImpl implements MobsimAgent, PlanAgent, HasPers
 		throw new RuntimeException("unexpected type of PlanElement");
 	}
 
-	@Override
-	public String toString() {
-		return MoreObjects.toStringHelper(this)
-				.add("plan", plan)
-				.add("vehicle", vehicle)
-				.add("state", state)
-				.add("currentPlanElementIndex", currentPlanElementIndex)
-				.add("currentLinkId", currentLinkId)
-				.toString();
-	}
 }

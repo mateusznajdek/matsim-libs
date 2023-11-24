@@ -22,6 +22,7 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
@@ -41,6 +42,7 @@ import com.google.common.base.MoreObjects;
  */
 @Getter
 @Setter
+@ToString
 public final class PlanBasedDriverAgentImpl implements DriverAgent {
 
 	private static final Logger log = LogManager.getLogger(PlanBasedDriverAgentImpl.class);
@@ -241,8 +243,4 @@ public final class PlanBasedDriverAgentImpl implements DriverAgent {
 		return this.basicPlanAgentDelegate.getMode();
 	}
 
-	@Override
-	public String toString() {
-		return MoreObjects.toStringHelper(this).add("basicPlanAgentDelegate", basicPlanAgentDelegate).toString();
-	}
 }

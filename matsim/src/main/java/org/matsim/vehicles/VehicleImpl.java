@@ -19,11 +19,12 @@
 
 package org.matsim.vehicles;
 
+import lombok.ToString;
 import org.matsim.api.core.v01.Id;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.matsim.utils.objectattributes.attributable.AttributesImpl;
-
+@ToString
 public final class VehicleImpl implements Vehicle {
 
     private VehicleType type;
@@ -47,12 +48,6 @@ public final class VehicleImpl implements Vehicle {
     public VehicleType getType() {
         return this.type;
     }
-
-    @Override
-    public String toString() {
-        return "[ID=" + id + " | type=" + type.toString() + "]";
-    }
-
 
     @Override
     public Attributes getAttributes() {

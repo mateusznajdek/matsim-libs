@@ -22,6 +22,7 @@ package org.matsim.core.population;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.network.Link;
@@ -42,6 +43,7 @@ import org.matsim.utils.objectattributes.attributable.LazyAllocationAttributes;
  */
 @Getter
 @Setter
+@ToString
 public final class ActivityImpl implements Activity {
 	// Assume this as input to iterations.  Cases:
 	// Case (0): comes with coord and linkId.  No problem.
@@ -169,30 +171,6 @@ public final class ActivityImpl implements Activity {
 //		testForLocked();
 		// I currently think that rather than enforcing data consistency we should just walk them from coordinate to link. kai, dec'15
 		this.linkId = linkId;
-	}
-
-	@Override
-	public String toString() {
-		return "act [type="
-				+ this.getType()
-				+ "]"
-				+ "[coord="
-				+ this.getCoord()
-				+ "]"
-				+ "[linkId="
-				+ this.linkId
-				+ "]"
-				+ "[startTime="
-				+ Time.writeTime(getStartTime())
-				+ "]"
-				+ "[endTime="
-				+ Time.writeTime(this.endTime)
-				+ "]"
-				+ "[duration="
-				+ Time.writeTime(getMaximumDuration())
-				+ "]"
-				+ "[facilityId="
-				+ this.facilityId + "]" ;
 	}
 
 	@Override

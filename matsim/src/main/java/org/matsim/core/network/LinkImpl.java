@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import lombok.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
@@ -35,7 +36,7 @@ import org.matsim.api.core.v01.network.Node;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.matsim.utils.objectattributes.attributable.AttributesImpl;
-
+@ToString
 /*deliberately package*/ class LinkImpl implements Link {
 
 	private final static Logger log = LogManager.getLogger(Link.class);
@@ -131,7 +132,7 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 		}
 	}
 
-	
+
 
 	//////////////////////////////////////////////////////////////////////
 	// get methods
@@ -184,7 +185,7 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 	}
 
 	// ---
-	
+
 	@Override
 	public double getFreespeed() {
 		return this.freespeed;
@@ -242,19 +243,6 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 	@Override
 	public final void setAllowedModes(final Set<String> modes) {
 		this.allowedModes = HashSetCache.get(modes);
-	}
-
-	@Override
-	public String toString() {
-		return super.toString() +
-		"[id=" + this.getId() + "]" +
-		"[from_id=" + this.from.getId() + "]" +
-		"[to_id=" + this.to.getId() + "]" +
-		"[length=" + this.length + "]" +
-		"[freespeed=" + this.freespeed + "]" +
-		"[capacity=" + this.capacity + "]" +
-		"[permlanes=" + this.nofLanes + "]" +
-		"[modes=" + this.allowedModes ;
 	}
 
 	@Override

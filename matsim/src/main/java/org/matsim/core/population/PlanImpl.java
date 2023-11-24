@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.Setter;
+import lombok.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Customizable;
@@ -36,12 +37,14 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.scenario.CustomizableUtils;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.matsim.utils.objectattributes.attributable.AttributesImpl;
+@ToString
 @Setter
 /* deliberately package */  public final class PlanImpl implements Plan {
 
 	private ArrayList<PlanElement> actsLegs = new ArrayList<>();
 
 	private Double score = null;
+	@ToString.Exclude
 	private Person person = null;
 
 	private String type = null;
@@ -136,25 +139,6 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 	@Override
 	public final void addActivity(final Activity act) {
 		this.actsLegs.add(act);
-	}
-
-	@Override
-	public final String toString() {
-
-		String scoreString = "undefined";
-		if (this.getScore() != null) {
-			scoreString = this.getScore().toString();
-		}
-		String personIdString = "undefined" ;
-		if ( this.getPerson() != null ) {
-			personIdString = this.getPerson().getId().toString() ;
-		}
-
-		return "[score=" + scoreString + "]" +
-//				"[selected=" + PersonUtils.isSelected(this) + "]" +
-				"[nof_acts_legs=" + getPlanElements().size() + "]" +
-				"[type=" + this.type + "]" +
-				"[personId=" + personIdString + "]" ;
 	}
 
 	@Override

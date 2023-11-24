@@ -23,6 +23,7 @@ package org.matsim.core.network;
 import java.util.Collections;
 import java.util.Map;
 
+import lombok.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
@@ -34,7 +35,7 @@ import org.matsim.core.scenario.Lockable;
 import org.matsim.core.utils.collections.IdentifiableArrayMap;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.matsim.utils.objectattributes.attributable.AttributesImpl;
-
+@ToString
 /*deliberately package*/ class NodeImpl implements Node, Lockable {
 
 	//////////////////////////////////////////////////////////////////////
@@ -72,11 +73,11 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 		this.id = id ;
 		this.coord = null ;
 	}
-	
+
 	/* package */ void  setType( final String type ) {
 		this.type = type == null ? null : type.intern();
-	}	
-	
+	}
+
 	private static int cnt2 = 0 ;
 	@Override
 	public final boolean addInLink(Link inlink) {
@@ -140,11 +141,11 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 	/*package*/ String getOrigId() {
 		return this.origid ;
 	}
-	
+
 	/*package*/ String getType() {
 		return this.type ;
 	}
-	
+
 	@Override
 	public Map<Id<Link>, ? extends Link> getInLinks() {
 		return Collections.unmodifiableMap(this.inlinks);
@@ -178,14 +179,6 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 	// print methods
 	//////////////////////////////////////////////////////////////////////
 
-	@Override
-	public String toString() {
-		return "[id=" + this.id + "]" +
-				"[coord=" + this.coord + "]" +
-				"[type=" + this.type + "]" +
-				"[nof_inlinks=" + this.inlinks.size() + "]" +
-				"[nof_outlinks=" + this.outlinks.size() + "]";
-	}
 
 	@Override
 	public void setLocked() {

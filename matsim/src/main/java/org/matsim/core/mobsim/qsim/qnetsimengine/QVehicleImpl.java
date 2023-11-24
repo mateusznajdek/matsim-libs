@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import lombok.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
@@ -47,7 +48,7 @@ import org.matsim.vehicles.VehicleCapacity;
  *
  * @author nagel
  */
-
+@ToString
 public class QVehicleImpl implements QVehicle {
 
 	private static final Logger log = LogManager.getLogger(QVehicleImpl.class);
@@ -181,12 +182,6 @@ public class QVehicleImpl implements QVehicle {
 	@Override
 	public Vehicle getVehicle() {
 		return this.vehicle;
-	}
-
-	@Override
-	public String toString() {
-		return "Vehicle Id " + getId() + ", driven by (personId) " + this.driver.getId()
-				+ ", on link " + this.currentLink.getId();
 	}
 
 	public double getMaximumVelocity() {

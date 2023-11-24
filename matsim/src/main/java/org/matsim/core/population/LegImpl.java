@@ -22,6 +22,7 @@ package org.matsim.core.population;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.router.TripStructureUtils;
@@ -32,6 +33,7 @@ import org.matsim.utils.objectattributes.attributable.LazyAllocationAttributes;
 
 @Getter
 @Setter
+@ToString
 public final class LegImpl implements Leg {
 
 	private static final double UNDEFINED_TIME = Double.NEGATIVE_INFINITY;
@@ -117,27 +119,6 @@ public final class LegImpl implements Leg {
 	@Override
 	public void setRoute(Route route) {
 		this.route = route;
-	}
-
-	@Override
-	public String toString() {
-		return "leg [mode="
-				+ this.getMode()
-				+ "]"
-				+ "[depTime="
-				+ Time.writeTime(this.getDepartureTime())
-				+ "]"
-				+ "[travTime="
-				+ Time.writeTime(this.getTravelTime())
-				+ "]"
-				+ "[arrTime="
-				+ (getDepartureTime().isDefined() && getTravelTime().isDefined() ?
-				Time.writeTime(getDepartureTime().seconds() + getTravelTime().seconds()) :
-				Time.writeTime(OptionalTime.undefined()))
-				+ "]"
-				+ "[route="
-				+ this.route
-				+ "]";
 	}
 
 

@@ -26,6 +26,7 @@ import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Customizable;
@@ -43,6 +44,7 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
  */
 @Getter
 @Setter
+@ToString
 /* deliberately package */ public final class PersonImpl implements Person, Lockable {
 
 	private List<Plan> plans = new ArrayList<>(6);
@@ -110,14 +112,6 @@ import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 			throw ee ;
 		}
 		this.id = newId;
-	}
-
-	@Override
-	public final String toString() {
-		StringBuilder b = new StringBuilder();
-		b.append("[id=").append(this.getId()).append("]");
-		b.append("[nof_plans=").append(this.getPlans() == null ? "null" : this.getPlans().size()).append("]");
-		return b.toString();
 	}
 
 	@Override

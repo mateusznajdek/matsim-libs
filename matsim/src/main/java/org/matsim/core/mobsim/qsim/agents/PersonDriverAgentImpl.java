@@ -111,11 +111,6 @@ public class PersonDriverAgentImpl implements MobsimDriverAgent, MobsimPassenger
         return basicAgentDelegate.getExpectedTravelDistance();
     }
 
-    @Override
-	public String toString() {
-		return basicAgentDelegate.toString();
-	}
-
 	@Override
 	public final PlanElement getCurrentPlanElement() {
 		return basicAgentDelegate.getCurrentPlanElement();
