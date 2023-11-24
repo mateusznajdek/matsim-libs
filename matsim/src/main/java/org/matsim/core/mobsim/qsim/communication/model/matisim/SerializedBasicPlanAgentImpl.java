@@ -18,6 +18,7 @@ public class SerializedBasicPlanAgentImpl implements CustomMatSimSerializable<Ba
 	// private MobsimVehicle vehicle ; // back reference
 
 	private int currentPlanElementIndex = 0;
+	private int currentLinkIndex = 0;
 	@Getter
 	private SerializedPerson serializedPerson;
 	private final boolean firstTimeToGetModifiablePlan;
@@ -29,6 +30,7 @@ public class SerializedBasicPlanAgentImpl implements CustomMatSimSerializable<Ba
 		this.finalActHasDpTimeWrnCnt = BasicPlanAgentImpl.finalActHasDpTimeWrnCnt;
 		this.noRouteWrnCnt = BasicPlanAgentImpl.noRouteWrnCnt;
 		this.currentPlanElementIndex = basicPlanAgent.getCurrentPlanElementIndex();
+		this.currentLinkIndex = basicPlanAgent.getCurrentLinkIndex();
 		this.firstTimeToGetModifiablePlan = basicPlanAgent.isFirstTimeToGetModifiablePlan();
 		this.currentLinkId = basicPlanAgent.getCurrentLinkId().toString();
 		this.activityEndTime = basicPlanAgent.getActivityEndTime();
@@ -58,6 +60,7 @@ public class SerializedBasicPlanAgentImpl implements CustomMatSimSerializable<Ba
 			stateTmp = MobsimAgent.State.ABORT;
 		basicPlanAgent.setState(stateTmp);
 		basicPlanAgent.setCurrentPlanElementIndex(currentPlanElementIndex);
+		basicPlanAgent.setCurrentLinkIndex(currentLinkIndex);
 		basicPlanAgent.setActivityEndTime(activityEndTime);
 		return basicPlanAgent;
 	}

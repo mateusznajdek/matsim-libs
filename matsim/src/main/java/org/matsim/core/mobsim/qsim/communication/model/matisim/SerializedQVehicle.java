@@ -28,7 +28,7 @@ public class SerializedQVehicle implements CustomMatSimSerializable<QVehicleImpl
 		this.linkEnterTime = qvehicle.getLinkEnterTime();
 		this.vehicleId = qvehicle.getId().toString();
 		this.currentLinkId = qvehicle.getCurrentLink().getId().toString();
-		this.vehicle = new SerializedVehicle(qvehicle.getVehicle());
+		this.vehicle = qvehicle.getVehicle()!=null ? new SerializedVehicle(qvehicle.getVehicle()) : null;
 		if ((PersonDriverAgentImpl) qvehicle.getDriver() == null)
 			throw new RuntimeException("Auuuuc");
 		this.driver = new SerializedDriver((PersonDriverAgentImpl) qvehicle.getDriver());

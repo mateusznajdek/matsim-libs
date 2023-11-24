@@ -19,9 +19,7 @@ public class SerializedDriver implements CustomMatSimSerializable<PersonDriverAg
 	@Override
 	public PersonDriverAgentImpl toRealObject(World world) {
 		return new PersonDriverAgentImpl(
-			serializedBasicPlanAgent.getSerializedPerson().toRealObject().getSelectedPlan(),
-			world.getSimulation(),
-			world.getTimeInterpretation()
+			serializedBasicPlanAgent.toRealObject(world)
 		);
 	}
 }

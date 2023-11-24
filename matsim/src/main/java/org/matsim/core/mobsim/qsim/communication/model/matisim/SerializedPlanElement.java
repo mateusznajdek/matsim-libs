@@ -29,8 +29,8 @@ public class SerializedPlanElement implements CustomSerializable<PlanElement> {
 	public SerializedPlanElement(PlanElement plan) {
 		if (plan instanceof ActivityImpl) {
 			this.implementationType = "ACTIVITY";
-			this.activ_startTime = ((ActivityImpl) plan).getStartTime().orElse(0); // TODO
-			this.activ_endTime = ((ActivityImpl) plan).getEndTime().orElse(0); // TODO
+			this.activ_startTime = ((ActivityImpl) plan).getRawStartTime();
+			this.activ_endTime = ((ActivityImpl) plan).getRawEndTime();
 			this.activ_dur = ((ActivityImpl) plan).getDur();
 			this.activ_type = ((ActivityImpl) plan).getType();
 			this.activ_coord = new SerializedCoord(((ActivityImpl) plan).getCoord());
@@ -63,8 +63,8 @@ public class SerializedPlanElement implements CustomSerializable<PlanElement> {
 			return leg;
 		} else if (this.implementationType.equals("ACTIVITY")) {
 			ActivityImpl activity = new ActivityImpl(this.activ_type);
-			activity.setStartTime(this.activ_startTime);
-			activity.setEndTime(this.activ_endTime);
+			activity.setRawStartTime(this.activ_startTime);
+			activity.setRawEndTime(this.activ_endTime);
 			activity.setDur(this.activ_dur);
 			activity.setCoord(this.activ_coord.toRealObject());
 			activity.setLinkId(Id.createLinkId(this.activ_linkId));

@@ -2,6 +2,7 @@ package org.matsim.core.mobsim.qsim.communication.model.matisim;
 
 import com.google.inject.Inject;
 import org.matsim.core.mobsim.framework.MobsimTimer;
+import org.matsim.core.mobsim.qsim.agents.PersonDriverAgentImpl;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicleImpl;
 
@@ -15,7 +16,10 @@ public class DeserializeUtil {
 	}
 
 	public QVehicleImpl deserializeQVehicle(SerializedQVehicle serializedQVehicle) {
-		return serializedQVehicle.toRealObject(world);
+		QVehicleImpl vehicle = serializedQVehicle.toRealObject(world);
+		// Fix backpointers
+		((PersonDriverAgentImpl)vehicle.getDriver()).getBasicAgentDelegate().setVehicle(vehicle);
+		return vehicle;
 	}
 
 	public void setNetsim(Netsim simulation) {
