@@ -271,7 +271,7 @@ public final class QLinkLanesImpl extends AbstractQLink {
 	}
 
 	@Override
-	public boolean doSimStep(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId) {
+	public boolean doSimStep(Collection<QVehicle> outGoingVehicles, Map<Id<Link>, Double> usedSpaceIncomingLanes, MyWorkerId myWorkerId) {
 		double now = context.getSimTimer().getTimeOfDay() ;
 
 		boolean lanesActive = false;

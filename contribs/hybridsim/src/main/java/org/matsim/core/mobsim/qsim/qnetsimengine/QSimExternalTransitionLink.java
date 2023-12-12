@@ -22,6 +22,7 @@ package org.matsim.core.mobsim.qsim.qnetsimengine;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.LinkEnterEvent;
@@ -56,7 +57,7 @@ public class QSimExternalTransitionLink extends AbstractQLink {
 	}
 
 	@Override
-	public boolean doSimStep(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId) {
+	public boolean doSimStep(Collection<QVehicle> outGoingVehicles, Map<Id<Link>, Double> usedSpaceIncomingLanes, MyWorkerId myWorkerId) {
 		return false;
 	}
 

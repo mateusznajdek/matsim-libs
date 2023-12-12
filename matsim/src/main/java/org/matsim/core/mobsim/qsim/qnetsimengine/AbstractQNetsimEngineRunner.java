@@ -20,6 +20,8 @@
 
 package org.matsim.core.mobsim.qsim.qnetsimengine;
 
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
@@ -121,23 +123,14 @@ abstract class AbstractQNetsimEngineRunner extends NetElementActivationRegistry 
 		ListIterator<QLinkI> simLinks = this.linksList.listIterator();
 
 		Collection<QVehicle> outGoingVehicles = new ArrayList<>();
+		Map<Id<Link>, Double> usedSpaceIncomingLanes = new HashMap<>();
 		while (simLinks.hasNext()) {
 			link = simLinks.next();
 
 			outGoingVehicles.clear();
-			remainsActive = link.doSimStep(outGoingVehicles, myWorkerId);
+			remainsActive = link.doSimStep(outGoingVehicles, usedSpaceIncomingLanes, myWorkerId);
 
-			neighbourManager.collectCarsFromLane(outGoingVehicles);
-
-			// TODO I think we also need to disable (deactivate?) the split link
-			//  on worker from which we send the sync message
-
-//			if (workerId.equals(link.getLink().getAttributes().getAttribute("partition"))) {
-//				System.out.println("SIMULATING LINK: " + link.getLink().getId());
-//				remainsActive = link.doSimStep();
-//			} else {
-//				System.out.println("SKIPPING LINK: " + link.getLink().getId());
-//			}
+			neighbourManager.prepareDataToBeSend(outGoingVehicles, usedSpaceIncomingLanes);
 
 			if (!remainsActive) simLinks.remove();
 		}

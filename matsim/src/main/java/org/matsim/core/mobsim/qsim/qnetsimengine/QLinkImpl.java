@@ -41,11 +41,7 @@ import org.matsim.vehicles.Vehicle;
 import org.matsim.vis.snapshotwriters.AgentSnapshotInfo;
 import org.matsim.vis.snapshotwriters.VisData;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Please read the docu of QBufferItem, QLane, QLinkInternalI (arguably to be renamed
@@ -128,29 +124,23 @@ public final class QLinkImpl extends AbstractQLink implements SignalizeableItem 
 	}
 
 	@Override
-	public boolean doSimStep(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId) {
+	public boolean doSimStep(Collection<QVehicle> outGoingVehicles, Map<Id<Link>, Double> usedSpaceIncomingLanes, MyWorkerId myWorkerId) {
 		if (!this.getLink().getFromNode().getAttributes().getAttribute("partition")
-			.equals(this.getLink().getToNode().getAttributes().getAttribute("partition"))
-			&& !this.getLink().getAttributes().getAttribute("partition").equals(Integer.valueOf(myWorkerId.get()))) {
+			.equals(this.getLink().getToNode().getAttributes().getAttribute("partition")) &&
+			!this.getLink().getAttributes().getAttribute("partition").equals(Integer.valueOf(myWorkerId.get()))) {
+			// outgoing lane at the other worker
 			var vehicles = qlane.getAllVehicles();
-			qlane.silentClearVehicles();
+			clearVehiclesFromThisLane(); // TODO this maybe just qlane.silentClearVehicles();
 			outGoingVehicles.addAll(vehicles);
 		} else if (this.getLink().getAttributes().getAttribute("partition").equals(Integer.valueOf(myWorkerId.get()))) {
-			double now = context.getSimTimer().getTimeOfDay();
-			qlane.initBeforeSimStep();
-
-			if (context.qsimConfig.isInsertingWaitingVehiclesBeforeDrivingVehicles()) {
-				this.moveWaitToRoad();
-				this.getTransitQLink().handleTransitVehiclesInStopQueue(now);
-				qlane.doSimStep(outGoingVehicles, myWorkerId);
-			} else {
-				this.getTransitQLink().handleTransitVehiclesInStopQueue(now);
-				qlane.doSimStep(outGoingVehicles, myWorkerId);
-				this.moveWaitToRoad();
+			 if (!this.getLink().getFromNode().getAttributes().getAttribute("partition")
+				 .equals(this.getLink().getToNode().getAttributes().getAttribute("partition"))) {
+				// incoming lane at this worker
+				usedSpaceIncomingLanes.put(this.getLink().getId(), qlane.getLoadIndicator());
 			}
+			normalSimulation(outGoingVehicles, usedSpaceIncomingLanes, myWorkerId);
 		} else {
-			qlane.silentClearVehicles();
-			getWaitingList().clear();
+			clearVehiclesFromThisLane();
 		}
 
 		this.setActive(this.checkForActivity());
@@ -160,6 +150,26 @@ public final class QLinkImpl extends AbstractQLink implements SignalizeableItem 
 		// and may be a qlink.deactivateLink(...) around it (analogous to qlink.activateLink).
 		// That is, do NOT pass the deactivation of the link rather implicitly via returning a false here.
 		// kai, mar'16
+	}
+
+	private void normalSimulation(Collection<QVehicle> outGoingVehicles, Map<Id<Link>, Double> usedSpaceIncomingLanes, MyWorkerId myWorkerId) {
+		double now = context.getSimTimer().getTimeOfDay();
+		qlane.initBeforeSimStep();
+
+		if (context.qsimConfig.isInsertingWaitingVehiclesBeforeDrivingVehicles()) {
+			this.moveWaitToRoad();
+			this.getTransitQLink().handleTransitVehiclesInStopQueue(now);
+			qlane.doSimStep(outGoingVehicles, myWorkerId);
+		} else {
+			this.getTransitQLink().handleTransitVehiclesInStopQueue(now);
+			qlane.doSimStep(outGoingVehicles, myWorkerId);
+			this.moveWaitToRoad();
+		}
+	}
+
+	private void clearVehiclesFromThisLane() {
+		qlane.silentClearVehicles();
+		getWaitingList().clear();
 	}
 
 

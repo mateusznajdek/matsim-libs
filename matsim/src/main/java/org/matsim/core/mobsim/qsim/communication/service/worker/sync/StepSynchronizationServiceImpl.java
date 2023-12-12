@@ -3,6 +3,8 @@ package org.matsim.core.mobsim.qsim.communication.service.worker.sync;
 import com.google.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.core.config.groups.ParallelizationConfigGroup;
@@ -53,6 +55,7 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 
 	// The key is the unwrapped WorkerId for which we want to accumulate vehicles to send to
 	private final Map<String, List<QVehicle>> vehiclesToSend = new HashMap<>();
+	private final Map<String, Double> usedSpaceIncomingLanes = new HashMap<>();
 
 	private final AtomicInteger sendingStep = new AtomicInteger(0);
 
@@ -84,7 +87,7 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 
 
 	@Override
-	public void collectCarsFromLane(Collection<QVehicle> outGoingVehicles) {
+	public void prepareDataToBeSend(Collection<QVehicle> outGoingVehicles, Map<Id<Link>, Double> usedSpaceIncomingLanes) {
 		for (var veh : outGoingVehicles) {
 			if (veh == null) {// TODO vehicle gets lost at some point - dont know why, but matsim removes it at some point...
 				LOG.warn("SKIPPING VEHICLE without vehicle ");
@@ -112,6 +115,10 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 			} else {
 				LOG.warn("SKIPPING VEHICLE without driver...");
 			}
+		}
+
+		for (Map.Entry<Id<Link>, Double> entry : usedSpaceIncomingLanes.entrySet()) {
+			this.usedSpaceIncomingLanes.put(entry.getKey().toString(), entry.getValue());
 		}
 	}
 
@@ -182,7 +189,8 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 				myWorkerId.get(),
 				ThreadLocalRandom.current().nextInt(),
 				step,
-				vehiclesToSend.get(workerId.getId()).stream().map(SerializedQVehicle::new).collect(Collectors.toList())
+				vehiclesToSend.get(workerId.getId()).stream().map(SerializedQVehicle::new).collect(Collectors.toList()),
+				usedSpaceIncomingLanes
 			);
 			try {
 				connection.send(syncMsg);
@@ -197,6 +205,7 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 			}
 			vehiclesToSend.get(workerId.getId()).clear();
 		});
+		usedSpaceIncomingLanes.clear();
 	}
 
 	@Override
@@ -206,6 +215,7 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 //		List<Future<?>> injectIncomingCarFutures = new LinkedList<>();  TODO this will for actual processing
 		incomingMessageBuffer.initConsumedMessages();
 		List<QVehicleImpl> receivedVehicles = new ArrayList<>();
+		Map<String, Double> usedSpaceIncomingLanes;
 		while (incomingMessageBuffer.getConsumedMessages() < countOfNeighbours) {
 			try {
 				LOG.debug(Thread.currentThread() + " waiting for messages..."
@@ -214,6 +224,7 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 				SyncStepMessage msg = incomingMessages.take();
 
 				receivedVehicles = msg.getVehicles().stream().map(deserializeUtil::deserializeQVehicle).toList();
+				usedSpaceIncomingLanes = msg.getUsedSpaceIncomingLanes();
 
 				LOG.debug(Thread.currentThread() + " got something here"
 					+ ", incomingMessages: " + incomingMessages.size()
@@ -222,9 +233,6 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 				this.incomingMessageBuffer.processNewMsg(countOfNeighbours);
 
 				LOG.debug(Thread.currentThread() + " processed");
-
-//				consumedMessages = incomingMessageBuffer.take(consumedMessages, countOfNeighbours);
-
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
