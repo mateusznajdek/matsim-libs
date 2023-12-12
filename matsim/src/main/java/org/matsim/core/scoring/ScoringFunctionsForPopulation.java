@@ -73,15 +73,15 @@ import static org.matsim.core.router.TripStructureUtils.Trip;
  * This class helps EventsToScore by keeping ScoringFunctions for the entire Population - one per Person -, and dispatching Activities
  * and Legs to the ScoringFunctions. It also gives out the ScoringFunctions, so they can be given other events by EventsToScore.
  * It is not independently useful. Please do not make public.
- * 
+ *
  * @author michaz
  *
  */
  final class ScoringFunctionsForPopulation implements BasicEventHandler {
-	
+
 	private final Population population;
 	private final ScoringFunctionFactory scoringFunctionFactory;
-	
+
 	private final EventsToLegs legsDelegate;
 	private final EventsToActivities actsDelegate;
 
@@ -89,14 +89,14 @@ import static org.matsim.core.router.TripStructureUtils.Trip;
 	private final IdMap<Person, TDoubleCollection> partialScores = new IdMap<>(Person.class);
 	private final AtomicReference<Throwable> exception = new AtomicReference<>();
 	private final IdMap<Person, Plan> tripRecords = new IdMap<>(Person.class);
-	
+
 	private final Vehicle2DriverEventHandler vehicles2Drivers = new Vehicle2DriverEventHandler();
 
 	@Inject
 	ScoringFunctionsForPopulation(ControlerListenerManager controlerListenerManager, EventsManager eventsManager, EventsToActivities eventsToActivities, EventsToLegs eventsToLegs,
 						 Population population, ScoringFunctionFactory scoringFunctionFactory, Config config) {
 		ControlerConfigGroup controlerConfigGroup = config.controler();
-		
+
 		if (controlerConfigGroup.getEventTypeToCreateScoringFunctions() == ControlerConfigGroup.EventTypeToCreateScoringFunctions.IterationStarts) {
 			controlerListenerManager.addControlerListener((IterationStartsListener) event -> init());
 		} else if (controlerConfigGroup.getEventTypeToCreateScoringFunctions() == ControlerConfigGroup.EventTypeToCreateScoringFunctions.BeforeMobsim) {
@@ -164,7 +164,10 @@ import static org.matsim.core.router.TripStructureUtils.Trip;
 		if (o instanceof LinkEnterEvent) {
 			Id<Vehicle> vehicleId = ((LinkEnterEvent)o).getVehicleId();
 			Id<Person> driverId = this.vehicles2Drivers.getDriverOfVehicle(vehicleId);
-			ScoringFunction scoringFunction = getScoringFunctionForAgent( driverId );
+			// For parallelization, as when removing the vehicle from one worker when it is send to the other
+			// It is also removed from this scoring mapping
+			ScoringFunction scoringFunction = null;
+			if (driverId != null) scoringFunction = getScoringFunctionForAgent( driverId );
 			// (this will NOT do the scoring function lookup twice since LinkEnterEvent is not an instance of HasPersonId.  kai, mar'17)
 			if (scoringFunction != null) {
 				scoringFunction.handleEvent(o);
@@ -248,7 +251,7 @@ import static org.matsim.core.router.TripStructureUtils.Trip;
 			TDoubleCollection partialScoresForAgent = this.partialScores.get(agentId);
 			partialScoresForAgent.add(scoringFunction.getScore());
 		}
-		
+
 		Plan plan = this.tripRecords.get( agentId ); // as container for trip
 		if ( plan!= null ) {
 			plan.addActivity( activity );

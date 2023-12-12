@@ -137,7 +137,7 @@ final class QNetsimEngineWithThreadpool extends AbstractQNetsimEngine<QNetsimEng
 		List<QNetsimEngineRunnerForThreadpool> engines = new ArrayList<>();
 		for (int i = 0; i < numOfRunners; i++) {
 			QNetsimEngineRunnerForThreadpool engine = new QNetsimEngineRunnerForThreadpool();
-			engine.setMyWorkerId(this.myWorkerId.get());
+			engine.setMyWorkerId(this.myWorkerId);
 			engine.setNeighbourManager(this.neighbourManager);
 			engines.add(engine);
 		}

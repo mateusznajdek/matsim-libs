@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Identifiable;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.lanes.Lane;
 import org.matsim.vehicles.Vehicle;
@@ -51,6 +52,8 @@ public interface QLaneI extends Identifiable<Lane> {
 
 	double getStorageCapacity();
 
+	void silentClearVehicles();
+
 	static interface VisData {
 		public Collection<AgentSnapshotInfo> addAgentSnapshotInfo(Collection<AgentSnapshotInfo> positions, double now ) ;
 	}
@@ -70,7 +73,7 @@ public interface QLaneI extends Identifiable<Lane> {
 
 	void changeEffectiveNumberOfLanes( final double val ) ;
 
-	boolean doSimStep(Collection<QVehicle> outGoingVehicles);
+	boolean doSimStep(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId);
 
 	void clearVehicles();
 

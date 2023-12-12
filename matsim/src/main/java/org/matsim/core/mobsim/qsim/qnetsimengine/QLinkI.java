@@ -27,6 +27,7 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.mobsim.qsim.interfaces.NetsimLink;
 import org.matsim.core.mobsim.qsim.interfaces.TimeVariantLink;
@@ -128,7 +129,7 @@ public interface QLinkI extends NetsimLink, TimeVariantLink {
 	/**
 	 * Seems ok as public interface function. kai, aug'15
 	 */
-	boolean doSimStep(Collection<QVehicle> outGoingVehicles);
+	boolean doSimStep(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId);
 
 	/**
 	 * Seems ok as public interface function. kai, aug'15

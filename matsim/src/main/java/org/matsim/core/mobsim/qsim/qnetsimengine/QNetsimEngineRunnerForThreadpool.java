@@ -23,7 +23,7 @@ package org.matsim.core.mobsim.qsim.qnetsimengine;
 import java.util.concurrent.Callable;
 
 import org.matsim.core.gbl.Gbl;
-import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 
 /**
@@ -63,7 +63,7 @@ final class QNetsimEngineRunnerForThreadpool extends AbstractQNetsimEngineRunner
 		this.movingNodes = movingNodes;
 	}
 
-	final public void setMyWorkerId(final String id){
+	final public void setMyWorkerId(final MyWorkerId id){
 		super.setMyWorkerId(id);
 	}
 	final public void setNeighbourManager(final StepSynchronizationService neighbourManager){

@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.VehicleEntersTrafficEvent;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngineI.NetsimInternalInterface;
 import org.matsim.core.mobsim.qsim.qnetsimengine.flow_efficiency.DefaultFlowEfficiencyCalculator;
@@ -270,7 +271,7 @@ public final class QLinkLanesImpl extends AbstractQLink {
 	}
 
 	@Override
-	public boolean doSimStep(Collection<QVehicle> outGoingVehicles) {
+	public boolean doSimStep(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId) {
 		double now = context.getSimTimer().getTimeOfDay() ;
 
 		boolean lanesActive = false;
@@ -285,10 +286,10 @@ public final class QLinkLanesImpl extends AbstractQLink {
 		    //michalm, jan'17
 			this.moveWaitToRoad(now);
 			this.getTransitQLink().handleTransitVehiclesInStopQueue(now);
-			lanesActive = this.moveLanes(outGoingVehicles);
+			lanesActive = this.moveLanes(outGoingVehicles, myWorkerId);
 		} else {
 			this.getTransitQLink().handleTransitVehiclesInStopQueue(now);
-			lanesActive = this.moveLanes(outGoingVehicles);
+			lanesActive = this.moveLanes(outGoingVehicles, myWorkerId);
 			movedWaitToRoad = this.moveWaitToRoad(now);
 		}
 		this.setActive(lanesActive || movedWaitToRoad || (!this.getWaitingList().isEmpty())
@@ -296,7 +297,7 @@ public final class QLinkLanesImpl extends AbstractQLink {
 		return this.isActive();
 	}
 
-	private boolean moveLanes(Collection<QVehicle> outGoingVehicles) {
+	private boolean moveLanes(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId) {
 		boolean activeLane = false;
 		for (QLaneI lane : this.laneQueues.values()) {
 			// (go through all lanes)
@@ -326,7 +327,7 @@ public final class QLinkLanesImpl extends AbstractQLink {
 
 			/* part B */
 			// move vehicles to the lane buffer if they have reached their earliest lane exit time
-			lane.doSimStep(outGoingVehicles);
+			lane.doSimStep(outGoingVehicles, myWorkerId);
 			/* end of part B */
 
 			activeLane = activeLane || lane.isActive();

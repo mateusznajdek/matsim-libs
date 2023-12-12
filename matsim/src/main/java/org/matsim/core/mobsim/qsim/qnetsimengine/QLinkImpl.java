@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.VehicleEntersTrafficEvent;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.mobsim.qsim.interfaces.SignalGroupState;
 import org.matsim.core.mobsim.qsim.interfaces.SignalizeableItem;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Please read the docu of QBufferItem, QLane, QLinkInternalI (arguably to be renamed
@@ -126,28 +128,30 @@ public final class QLinkImpl extends AbstractQLink implements SignalizeableItem 
 	}
 
 	@Override
-	public boolean doSimStep(Collection<QVehicle> outGoingVehicles) {
-		// Are you  outgoing link? TODO this is broken?
-
-		if (!this.getLink().getFromNode().getAttributes().getAttribute("partition").equals(this.getLink().getToNode().getAttributes().getAttribute("partition"))) {
+	public boolean doSimStep(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId) {
+		if (!this.getLink().getFromNode().getAttributes().getAttribute("partition")
+			.equals(this.getLink().getToNode().getAttributes().getAttribute("partition"))
+			&& !this.getLink().getAttributes().getAttribute("partition").equals(Integer.valueOf(myWorkerId.get()))) {
 			var vehicles = qlane.getAllVehicles();
-//			qlane.clearVehicles(); TODO uncomment this line!!!
+			qlane.silentClearVehicles();
 			outGoingVehicles.addAll(vehicles);
-		}
-//		else { TODO uncomment this line!!!
+		} else if (this.getLink().getAttributes().getAttribute("partition").equals(Integer.valueOf(myWorkerId.get()))) {
 			double now = context.getSimTimer().getTimeOfDay();
 			qlane.initBeforeSimStep();
 
 			if (context.qsimConfig.isInsertingWaitingVehiclesBeforeDrivingVehicles()) {
 				this.moveWaitToRoad();
 				this.getTransitQLink().handleTransitVehiclesInStopQueue(now);
-				qlane.doSimStep(outGoingVehicles);
+				qlane.doSimStep(outGoingVehicles, myWorkerId);
 			} else {
 				this.getTransitQLink().handleTransitVehiclesInStopQueue(now);
-				qlane.doSimStep(outGoingVehicles);
+				qlane.doSimStep(outGoingVehicles, myWorkerId);
 				this.moveWaitToRoad();
 			}
-//		} TODO uncomment this line!!!
+		} else {
+			qlane.silentClearVehicles();
+			getWaitingList().clear();
+		}
 
 		this.setActive(this.checkForActivity());
 		return isActive();

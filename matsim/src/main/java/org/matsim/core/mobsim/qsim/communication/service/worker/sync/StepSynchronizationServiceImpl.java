@@ -55,7 +55,6 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 	private final Map<String, List<QVehicle>> vehiclesToSend = new HashMap<>();
 
 	private final AtomicInteger sendingStep = new AtomicInteger(0);
-	private final AtomicInteger receivingStep = new AtomicInteger(0);
 
 	private IncomingMessageBuffer incomingMessageBuffer = new IncomingMessageBuffer(incomingMessages, futureIncomingMessages);
 
@@ -123,14 +122,8 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 			.map(rawWorkerId -> new WorkerId(String.valueOf(rawWorkerId)))
 			.filter(messageSenderService.getConnectionMap()::containsKey)
 			.forEach(workerId -> neighbourRepository.put(workerId, messageSenderService.getConnectionMap().get(workerId)));
-		// vs
 
 		getMyNeighboursIds().forEach(neighbour -> vehiclesToSend.putIfAbsent(String.valueOf(neighbour), new ArrayList<>()));
-
-//		connectionMap.forEach((workerId, connection) -> {
-//			if (neighbourManager.getMyNeighboursIds().contains(Integer.valueOf(workerId.getId())))
-//				neighbourRepository.put(workerId, connectionMap.get(workerId));
-//		});
 	}
 
 	@Override
@@ -150,7 +143,7 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 
 	@Override
 	public void sendSyncMessageToNeighbours() {
-		LOG.info(Thread.currentThread() + "::: sendSyncMessageToNeighbours");
+		LOG.debug(Thread.currentThread() + "::: sendSyncMessageToNeighbours");
 		int currentStep = sendingStep.getAndIncrement();
 		sendToNeighbours(currentStep);
 	}
@@ -207,11 +200,12 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 	}
 
 	@Override
-	public void getSyncMessages() {
+	public List<QVehicleImpl> getSyncMessages() {
 		int countOfNeighbours = this.getNumberOfNeighbours();
 		LOG.debug(Thread.currentThread() + "::: Getting all sync messages from: " + countOfNeighbours + " neighbours"); // info for demonstration
 //		List<Future<?>> injectIncomingCarFutures = new LinkedList<>();  TODO this will for actual processing
 		incomingMessageBuffer.initConsumedMessages();
+		List<QVehicleImpl> receivedVehicles = new ArrayList<>();
 		while (incomingMessageBuffer.getConsumedMessages() < countOfNeighbours) {
 			try {
 				LOG.debug(Thread.currentThread() + " waiting for messages..."
@@ -219,7 +213,7 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 					+ ", futureIM: " + futureIncomingMessages.size());
 				SyncStepMessage msg = incomingMessages.take();
 
-				List<QVehicleImpl> cars = msg.getVehicles().stream().map(deserializeUtil::deserializeQVehicle).toList();
+				receivedVehicles = msg.getVehicles().stream().map(deserializeUtil::deserializeQVehicle).toList();
 
 				LOG.debug(Thread.currentThread() + " got something here"
 					+ ", incomingMessages: " + incomingMessages.size()
@@ -245,6 +239,7 @@ public class StepSynchronizationServiceImpl implements StepSynchronizationServic
 			+ ", incomingMessages: " + incomingMessages.size()
 			+ ", futureIM: " + futureIncomingMessages.size());
 
+		return receivedVehicles;
 //		taskExecutorService.waitForAllTaskFinished(injectIncomingCarFutures);
 		// taskExecutorService.executeBatch(injectIncomingCarTasks);
 	}

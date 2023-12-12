@@ -29,6 +29,7 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.contrib.hybridsim.simulation.ExternalEngine;
 import org.matsim.core.api.experimental.events.EventsManager;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngineI.NetsimInternalInterface;
 import org.matsim.core.mobsim.qsim.qnetsimengine.linkspeedcalculator.LinkSpeedCalculator;
@@ -55,7 +56,7 @@ public class QSimExternalTransitionLink extends AbstractQLink {
 	}
 
 	@Override
-	public boolean doSimStep(Collection<QVehicle> outGoingVehicles) {
+	public boolean doSimStep(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId) {
 		return false;
 	}
 
@@ -169,7 +170,7 @@ public class QSimExternalTransitionLink extends AbstractQLink {
 		}
 
 		@Override
-		public boolean doSimStep(Collection<QVehicle> outGoingVehicles) {
+		public boolean doSimStep(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId) {
 			throw new RuntimeException("not implemented") ;
 		}
 
@@ -202,13 +203,18 @@ public class QSimExternalTransitionLink extends AbstractQLink {
 		}
 
 		@Override
+		public QVehicle getVehicle(Id<Vehicle> vehicleId) {
+			throw new RuntimeException("not implemented");
+		}
+
+		@Override
 		public double getStorageCapacity() {
 			throw new RuntimeException("not implemented") ;
 		}
 
 		@Override
-		public QVehicle getVehicle(Id<Vehicle> arg0) {
-			throw new RuntimeException("not implemented") ;
+		public void silentClearVehicles() {
+
 		}
 
 		@Override

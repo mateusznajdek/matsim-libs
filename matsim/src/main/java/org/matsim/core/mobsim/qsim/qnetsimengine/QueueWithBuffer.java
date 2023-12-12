@@ -42,7 +42,7 @@ import org.matsim.core.config.groups.QSimConfigGroup.TrafficDynamics;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.gbl.MatsimRandom;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
-import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.interfaces.SignalGroupState;
 import org.matsim.core.mobsim.qsim.interfaces.SignalizeableItem;
 import org.matsim.core.mobsim.qsim.pt.TransitDriverAgent;
@@ -558,7 +558,7 @@ final class QueueWithBuffer implements QLaneI, SignalizeableItem {
 	}
 
 	@Override
-	public final boolean doSimStep(Collection<QVehicle> outGoingVehicles) {
+	public final boolean doSimStep(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId) {
 		switch (context.qsimConfig.getTrafficDynamics()) {
 			case queue:
 				break;
@@ -877,6 +877,14 @@ final class QueueWithBuffer implements QLaneI, SignalizeableItem {
 		holes.clear();
 		this.remainingHolesStorageCapacity = this.storageCapacity;
     }
+
+	public void silentClearVehicles() {
+		vehQueue.clear();
+		buffer.clear();
+		holes.clear();
+		this.remainingHolesStorageCapacity = this.storageCapacity;
+
+	}
 
     private double getFlowCapacityConsumptionInEquivalents(QVehicle vehicle, QVehicle prevVehicle, Double timeDiff) {
         double flowEfficiency = flowEfficiencyCalculator.calculateFlowEfficiency(vehicle, prevVehicle, timeDiff, qLink.getLink(), id);

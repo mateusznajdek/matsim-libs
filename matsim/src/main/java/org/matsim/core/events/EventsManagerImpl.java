@@ -109,6 +109,29 @@ public final class EventsManagerImpl implements EventsManager {
 
 	@Override
 	public void processEvent(final Event event) {
+		if (event.getEventType().equals("left link")) {
+			log.info("LINK EVENT " + event.getEventType() + " FOR vehicle: "
+				+ ((LinkLeaveEvent) event).getVehicleId() + ", link: " + ((LinkLeaveEvent) event).getLinkId());
+		} else if (event.getEventType().equals("entered link")) {
+			log.info("LINK EVENT " + event.getEventType() + " FOR vehicle: "
+				+ ((LinkEnterEvent) event).getVehicleId() + ", link: " + ((LinkEnterEvent) event).getLinkId());
+		} else if (event.getEventType().equals("vehicle enters traffic")) {
+			log.info("LINK EVENT " + event.getEventType()
+				+ " FOR vehicle: " + ((VehicleEntersTrafficEvent) event).getVehicleId()
+				+ ", link: " + ((VehicleEntersTrafficEvent) event).getLinkId()
+				+ ", person: " + ((VehicleEntersTrafficEvent) event).getPersonId());
+		} else if (event.getEventType().equals("vehicle aborts")) {
+			log.info("LINK EVENT " + event.getEventType()
+				+ " FOR vehicle: " + ((VehicleAbortsEvent) event).getVehicleId()
+				+ ", link: " + ((VehicleAbortsEvent) event).getLinkId());
+		}  else if (event.getEventType().equals("stuckAndAbort")) {
+			log.info("LINK EVENT " + event.getEventType()
+				+ " FOR person: " + ((PersonStuckEvent) event).getPersonId()
+				+ ", link: " + ((PersonStuckEvent) event).getLinkId());
+		} else {
+			log.info("LINK EVENT " + event.getEventType());
+		}
+
 		this.counter++;
 		if (this.counter == this.nextCounterMsg) {
 			this.nextCounterMsg *= 4;
