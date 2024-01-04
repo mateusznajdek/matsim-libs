@@ -9,7 +9,7 @@
 		</leg>
 		<act type="w" x="10000" y="0" link="20" dur="00:10" />
 		<leg mode="car">
-			<route> </route>
+			<route>12 13</route>
 		</leg>
 		<act type="w" x="10000" y="0" link="20" dur="03:30" />
 		<leg mode="car">
@@ -26,7 +26,7 @@
 		</leg>
 		<act type="w" x="10000" y="0" link="20" dur="00:10" />
 		<leg mode="car">
-			<route> </route>
+			<route>12 13</route>
 		</leg>
 		<act type="w" x="10000" y="0" link="20" dur="03:30" />
 		<leg mode="car">

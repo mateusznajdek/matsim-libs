@@ -1,0 +1,1522 @@
+{
+  "linkEnterTime": 0.0,
+  "earliestLinkExitTime": 21960.0,
+  "driver": {
+    "basicAgentDelegate": {
+      "plan": {
+        "delegate": {
+          "actsLegs": [],
+          "score": null,
+          "person": {
+            "plans": null,
+            "id": {
+              "id": null,
+              "index": null
+            },
+            "selectedPlan": null,
+            "customizableDelegate": null,
+            "locked": true,
+            "attributes": {
+              "keys": null,
+              "values": null
+            }
+          },
+          "type": null,
+          "customizableDelegate": null,
+          "attributes": {
+            "keys": [],
+            "values": []
+          }
+        },
+        "unmodifiablePlanElements": [
+          {
+            "delegate": null
+          },
+          {
+            "delegate": null
+          },
+          {
+            "delegate": null
+          },
+          {
+            "delegate": null
+          },
+          {
+            "delegate": null
+          },
+          {
+            "delegate": null
+          },
+          {
+            "delegate": null
+          }
+        ]
+      },
+      "events": {
+        "simStepEndBarrier": {
+          "lock": {
+            "sync": {
+              "tail": null,
+              "state": null,
+              "head": null,
+              "exclusiveOwnerThread": null
+            }
+          },
+          "trip": {
+            "firstWaiter": null,
+            "lastWaiter": null
+          },
+          "parties": 2,
+          "barrierCommand": null,
+          "generation": {
+            "broken": false
+          },
+          "count": 2
+        },
+        "runnables": [
+          {
+            "eventsManager": {
+              "handlerData": null,
+              "cacheHandlers": null,
+              "counter": null,
+              "nextCounterMsg": null
+            },
+            "processedEventsChecker": {
+              "evenentsManger": null,
+              "eventQueues": null,
+              "allEventsProcessed": null,
+              "time": null
+            },
+            "waitForEmptyQueuesBarrier": {
+              "lock": null,
+              "trip": null,
+              "parties": null,
+              "barrierCommand": null,
+              "generation": null,
+              "count": null
+            },
+            "simStepEndBarrier": null,
+            "iterationEndBarrier": {
+              "lock": null,
+              "trip": null,
+              "parties": null,
+              "barrierCommand": null,
+              "generation": null,
+              "count": null
+            },
+            "eventsQueue": null,
+            "nextEventsQueue": null,
+            "lastEventTime": 21601.0
+          }
+        ],
+        "delegate": {
+          "handlerData": [],
+          "cacheHandlers": {},
+          "counter": 0,
+          "nextCounterMsg": 1
+        },
+        "handlerCount": 6,
+        "counter": {
+          "value": 14
+        },
+        "numOfThreads": 1,
+        "iterationEndBarrier": null,
+        "eventsManagers": [],
+        "processedEventsChecker": null,
+        "parallelMode": true,
+        "hadException": {
+          "value": null
+        }
+      },
+      "vehicle": null,
+      "activityEndTime": 21600.0,
+      "currentLinkId": {
+        "id": "5",
+        "index": 4
+      },
+      "currentLinkIndex": 1,
+      "currentPlanElementIndex": 1,
+      "firstTimeToGetModifiablePlan": true,
+      "scenario": {
+        "elements": {
+          "counts": {
+            "name": null,
+            "desc": null,
+            "year": 0,
+            "counts": {}
+          },
+          "allvehicles": {
+            "vehicleTypes": {
+              "defaultVehicleType": null
+            },
+            "vehicles": {
+              "1": null,
+              "2": null
+            },
+            "builder": {},
+            "counter": {
+              "prefix": null,
+              "suffix": null,
+              "multiplier": null,
+              "counter": null,
+              "nextCounter": null
+            }
+          },
+          "allpersons": {
+            "attributes": {
+              "keys": null,
+              "values": null
+            },
+            "name": null,
+            "persons": {
+              "1": null,
+              "2": null
+            },
+            "populationFactory": {
+              "routeFactory": null
+            },
+            "counter": 2,
+            "nextMsg": 4
+          }
+        },
+        "network": {
+          "capacityPeriod": 3600.0,
+          "nodeQuadTree": {
+            "top": {
+              "leaves": null,
+              "hasChilds": null,
+              "northwest": null,
+              "northeast": null,
+              "southeast": null,
+              "southwest": null,
+              "bounds": null
+            },
+            "size": 15,
+            "modCount": 15,
+            "values": null
+          },
+          "effectiveLaneWidth": 3.75,
+          "name": null,
+          "nextMsg2": 16,
+          "linkQuadTree": null,
+          "locked": true,
+          "attributes": {
+            "keys": [],
+            "values": []
+          },
+          "nodes": {
+            "1": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "2": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "3": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "4": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "5": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "6": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "7": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "8": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "9": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "10": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "11": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "12": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "13": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "14": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            },
+            "15": {
+              "type": null,
+              "origid": null,
+              "inlinks": null,
+              "outlinks": null,
+              "coord": null,
+              "id": null,
+              "locked": null,
+              "attributes": null
+            }
+          },
+          "effectiveCellSize": 7.5,
+          "factory": {
+            "linkFactory": {},
+            "network": null
+          },
+          "nextMsg": 64,
+          "links": {
+            "1": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "2": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "3": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "4": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "5": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "6": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "7": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "8": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "9": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "10": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "11": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "12": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "13": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "14": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "15": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "16": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "17": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "18": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "19": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "20": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "21": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "22": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            },
+            "23": {
+              "from": null,
+              "length": null,
+              "freespeed": null,
+              "capacity": null,
+              "nofLanes": null,
+              "allowedModes": null,
+              "attributes": null,
+              "id": null,
+              "to": null,
+              "network": null
+            }
+          },
+          "networkChangeEvents": [],
+          "counter": 23,
+          "counter2": 15
+        },
+        "facilities": {
+          "nextMsg": 1,
+          "factory": {},
+          "attributes": {
+            "keys": null,
+            "values": null
+          },
+          "facilities": {
+            "1": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "10": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "11": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "12": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "13": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "14": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "15": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "16": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "17": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "18": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "19": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "2": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "20": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "21": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "22": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "23": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "3": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "4": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "5": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "6": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "7": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "8": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            },
+            "9": {
+              "customizableDelegate": null,
+              "activities": null,
+              "desc": null,
+              "coord": null,
+              "id": null,
+              "linkId": null,
+              "locked": null,
+              "attributes": null
+            }
+          },
+          "name": "equil test facilities",
+          "facilitiesQuadTree": null
+        },
+        "lanes": {
+          "lanesToLinkAssignments": {},
+          "builder": {}
+        },
+        "transitVehicles": {
+          "vehicleTypes": {},
+          "vehicles": {},
+          "builder": {},
+          "counter": {
+            "prefix": "[VehiclesImpl] added vehicle # ",
+            "suffix": "",
+            "multiplier": 2,
+            "counter": {
+              "value": null
+            },
+            "nextCounter": {
+              "value": null
+            }
+          }
+        },
+        "locked": true,
+        "config": {
+          "modules": {
+            "JDEQSim": {
+              "gapTravelSpeed": null,
+              "storageCapacityFactor": null,
+              "minimumInFlowCapacity": null,
+              "stringGetters": null,
+              "name": null,
+              "paramFields": null,
+              "params": null,
+              "flowCapacityFactor": null,
+              "carSize": null,
+              "squeezeTime": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "simulationEndTime": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null
+            },
+            "ReplanningAnnealer": {
+              "stringGetters": null,
+              "registeredParams": null,
+              "name": null,
+              "parameterSetsPerType": null,
+              "setters": null,
+              "paramFields": null,
+              "params": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "activateAnnealingModule": null
+            },
+            "TimeAllocationMutator": {
+              "mutationRange": null,
+              "stringGetters": null,
+              "registeredParams": null,
+              "name": null,
+              "parameterSetsPerType": null,
+              "setters": null,
+              "paramFields": null,
+              "params": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "affectingDuration": null,
+              "useIndividualSettingsForSubpopulations": null
+            },
+            "changeLegMode": {
+              "stringGetters": null,
+              "registeredParams": null,
+              "name": null,
+              "parameterSetsPerType": null,
+              "setters": null,
+              "paramFields": null,
+              "params": null,
+              "locked": null,
+              "storeUnknownParameters": null
+            },
+            "changeMode": {
+              "modes": null,
+              "stringGetters": null,
+              "registeredParams": null,
+              "name": null,
+              "parameterSetsPerType": null,
+              "behavior": null,
+              "setters": null,
+              "paramFields": null,
+              "params": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "ignoreCarAvailability": null
+            },
+            "controler": {
+              "eventsFileFormats": null,
+              "writeSnapshotsInterval": null,
+              "stringGetters": null,
+              "mobsim": null,
+              "writePlansUntilIteration": null,
+              "paramFields": null,
+              "compressionType": null,
+              "writeEventsUntilIteration": null,
+              "registeredParams": null,
+              "firstIteration": null,
+              "dumpDataAtEnd": null,
+              "overwriteFileSetting": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "linkToLinkRoutingEnabled": null,
+              "createGraphs": null,
+              "outputDirectory": null,
+              "lastIteration": null,
+              "cleanItersAtEnd": null,
+              "name": null,
+              "routingAlgorithmType": null,
+              "writeEventsInterval": null,
+              "snapshotFormat": null,
+              "params": null,
+              "eventTypeToCreateScoringFunctions": null,
+              "writePlansInterval": null,
+              "parameterSetsPerType": null,
+              "runId": null,
+              "writeTripsInterval": null,
+              "setters": null
+            },
+            "counts": {
+              "distanceFilter": null,
+              "countsScaleFactor": null,
+              "inputCRS": null,
+              "stringGetters": null,
+              "name": null,
+              "distanceFilterCenterNode": null,
+              "paramFields": null,
+              "params": null,
+              "inputFile": null,
+              "averageCountsOverIterations": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "outputFormat": null,
+              "writeCountsInterval": null,
+              "analyzedModes": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "filterModes": null
+            },
+            "facilities": {
+              "inputFacilitiesAttributesFile": null,
+              "stringGetters": null,
+              "name": null,
+              "inputCRS": null,
+              "paramFields": null,
+              "params": null,
+              "idPrefix": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "inputFile": null,
+              "facilitiesSource": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "insistingOnUsingDeprecatedPersonAttributeFile": null
+            },
+            "global": {
+              "relativePositionOfEntryExitOnLink": null,
+              "defaultDelimiter": null,
+              "stringGetters": null,
+              "name": null,
+              "coordinateSystem": null,
+              "paramFields": null,
+              "params": null,
+              "randomSeed": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "numberOfThreads": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "insistingOnDeprecatedConfigVersion": null
+            },
+            "hermes": {
+              "mainModes": null,
+              "storageCapacityFactor": null,
+              "stringGetters": null,
+              "name": null,
+              "paramFields": null,
+              "params": null,
+              "flowCapacityFactor": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "stuckTime": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "deterministicPt": null
+            },
+            "households": {
+              "inputHouseholdAttributesFile": null,
+              "stringGetters": null,
+              "registeredParams": null,
+              "name": null,
+              "parameterSetsPerType": null,
+              "inputFile": null,
+              "setters": null,
+              "paramFields": null,
+              "params": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "insistingOnUsingDeprecatedAttributeFile": null
+            },
+            "linkStats": {
+              "averageLinkStatsOverIterations": null,
+              "stringGetters": null,
+              "registeredParams": null,
+              "name": null,
+              "parameterSetsPerType": null,
+              "writeLinkStatsInterval": null,
+              "setters": null,
+              "paramFields": null,
+              "params": null,
+              "locked": null,
+              "storeUnknownParameters": null
+            },
+            "network": {
+              "inputCRS": null,
+              "laneDefinitionsFile": null,
+              "stringGetters": null,
+              "registeredParams": null,
+              "name": null,
+              "parameterSetsPerType": null,
+              "inputFile": null,
+              "changeEventsInputFile": null,
+              "setters": null,
+              "paramFields": null,
+              "params": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "timeVariantNetwork": null
+            },
+            "parallelEventHandling": {
+              "numberOfThreads": null,
+              "stringGetters": null,
+              "name": null,
+              "estimatedNumberOfEvents": null,
+              "paramFields": null,
+              "params": null,
+              "synchronizeOnSimSteps": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "oneThreadPerHandler": null,
+              "eventsQueueSize": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "locked": null
+            },
+            "parallelization": {
+              "workerCount": null,
+              "stringGetters": null,
+              "name": null,
+              "serverIp": null,
+              "paramFields": null,
+              "params": null,
+              "workerId": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "serverPort": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "serverOnThisMachine": null
+            },
+            "planCalcScore": {
+              "activityTypesByNumber": null,
+              "name": null,
+              "params": null,
+              "parameterSetsPerType": null,
+              "delegate": null,
+              "locked": null,
+              "usesDeprecatedSyntax": null,
+              "memorizingExperiencedPlans": null
+            },
+            "plans": {
+              "networkRouteType": null,
+              "tripDurationHandling": null,
+              "stringGetters": null,
+              "name": null,
+              "inputPersonAttributeFile": null,
+              "handlingOfPlansWithoutRoutingMode": null,
+              "paramFields": null,
+              "params": null,
+              "inputCRS": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "inputFile": null,
+              "activityDurationInterpretation": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "insistingOnUsingDeprecatedPersonAttributeFile": null,
+              "removingUnneccessaryPlanAttributes": null
+            },
+            "planscalcroute": {
+              "routingRandomness": null,
+              "name": null,
+              "params": null,
+              "beelineDistanceFactor": null,
+              "parameterSetsPerType": null,
+              "networkModes": null,
+              "accessEgressType": null,
+              "locked": null,
+              "acceptModeParamsWithoutClearing": null,
+              "clearingDefaultModeRoutingParams": null
+            },
+            "ptCounts": {
+              "distanceFilterCenterNode": null,
+              "countsScaleFactor": null,
+              "stringGetters": null,
+              "name": null,
+              "occupancyCountsFileName": null,
+              "paramFields": null,
+              "params": null,
+              "outputFormat": null,
+              "boardCountsFileName": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "distanceFilter": null,
+              "alightCountsFileName": null,
+              "ptCountsInterval": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null
+            },
+            "qsim": {
+              "flowCapFactor": null,
+              "filterSnapshots": null,
+              "nodeOffset": null,
+              "seepModes": null,
+              "stringGetters": null,
+              "simStarttimeInterpretation": null,
+              "simEndtimeInterpretation": null,
+              "paramFields": null,
+              "storageCapFactor": null,
+              "vehicleBehavior": null,
+              "linkWidth": null,
+              "nodeTransitionLogic": null,
+              "registeredParams": null,
+              "numberOfThreads": null,
+              "snapshotStyle": null,
+              "usingFastCapacityUpdate": null,
+              "locked": null,
+              "isSeepModeStorageFree": null,
+              "storeUnknownParameters": null,
+              "removeStuckVehicles": null,
+              "insertingWaitingVehiclesBeforeDrivingVehicles": null,
+              "usePersonIdForMissingVehicleId": null,
+              "useLanes": null,
+              "timeStepSize": null,
+              "stuckTime": null,
+              "trafficDynamics": null,
+              "isRestrictingSeepage": null,
+              "name": null,
+              "usingTravelTimeCheckInTeleportation": null,
+              "inflowCapacitySetting": null,
+              "linkDynamics": null,
+              "params": null,
+              "startTime": null,
+              "snapshotPeriod": null,
+              "pcuThresholdForFlowCapacityEasing": null,
+              "mainModes": null,
+              "parameterSetsPerType": null,
+              "endTime": null,
+              "vehiclesSource": null,
+              "setters": null
+            },
+            "scenario": {
+              "simulationPeriodInDays": null,
+              "name": null,
+              "parameterSetsPerType": null,
+              "params": null,
+              "locked": null
+            },
+            "strategy": {
+              "delegate": null,
+              "name": null,
+              "params": null,
+              "parameterSetsPerType": null,
+              "locked": null
+            },
+            "subtourModeChoice": {
+              "allModes": null,
+              "probaForRandomSingleTripMode": null,
+              "stringGetters": null,
+              "name": null,
+              "behavior": null,
+              "paramFields": null,
+              "params": null,
+              "coordDistance": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "chainBasedModes": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "considerCarAvailability": null
+            },
+            "transit": {
+              "transitScheduleFile": null,
+              "inputScheduleCRS": null,
+              "stringGetters": null,
+              "name": null,
+              "vehiclesFile": null,
+              "transitModes": null,
+              "paramFields": null,
+              "params": null,
+              "transitLinesAttributesFile": null,
+              "routingAlgorithmType": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "transitStopsAttributesFile": null,
+              "boardingAcceptance": null,
+              "usingTransitInMobsim": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "useTransit": null,
+              "insistingOnUsingDeprecatedAttributeFiles": null
+            },
+            "transitRouter": {
+              "searchRadius": null,
+              "maxBeelineWalkConnectionDistance": null,
+              "directWalkFactor": null,
+              "stringGetters": null,
+              "name": null,
+              "paramFields": null,
+              "params": null,
+              "extensionRadius": null,
+              "additionalTransferTime": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "cacheTree": null
+            },
+            "travelTimeCalculator": {
+              "travelTimeAggregator": null,
+              "traveltimeBinSize": null,
+              "stringGetters": null,
+              "name": null,
+              "travelTimeGetter": null,
+              "paramFields": null,
+              "params": null,
+              "analyzedModes": null,
+              "filterModes": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "separateModes": null,
+              "travelTimeCalculator": null,
+              "maxTime": null,
+              "setters": null,
+              "locked": null,
+              "storeUnknownParameters": null,
+              "calculateLinkTravelTimes": null,
+              "calculateLinkToLinkTravelTimes": null
+            },
+            "vehicles": {
+              "stringGetters": null,
+              "registeredParams": null,
+              "name": null,
+              "parameterSetsPerType": null,
+              "inputFile": null,
+              "setters": null,
+              "paramFields": null,
+              "params": null,
+              "locked": null,
+              "storeUnknownParameters": null
+            },
+            "vspExperimental": {
+              "logitScaleParamForPlansRemoval": null,
+              "stringGetters": null,
+              "name": null,
+              "paramFields": null,
+              "params": null,
+              "vspDefaultsCheckingLevel": null,
+              "registeredParams": null,
+              "parameterSetsPerType": null,
+              "isAbleToOverwritePtInteractionParams": null,
+              "checkingOfMarginalUtilityOfTravellng": null,
+              "setters": null,
+              "locked": null,
+              "isUsingOpportunityCostOfTimeForLocationChoice": null,
+              "storeUnknownParameters": null,
+              "writingOutputEvents": null,
+              "isGeneratingBoardingDeniedEvent": null
+            }
+          },
+          "consistencyCheckers": [],
+          "locked": false,
+          "context": {
+            "host": "",
+            "query": null,
+            "path": "/home/mateusz/IdeaProjects/MatSim/matsim-libs/examples/target/classes/test/scenarios/equil/config.xml",
+            "ref": null,
+            "handler": {},
+            "hashCode": -1,
+            "protocol": "file",
+            "port": -1,
+            "file": "/home/mateusz/IdeaProjects/MatSim/matsim-libs/examples/target/classes/test/scenarios/equil/config.xml",
+            "authority": "",
+            "userInfo": null,
+            "hostAddress": null,
+            "tempState": null
+          }
+        },
+        "population": {
+          "attributes": {
+            "keys": [],
+            "values": []
+          },
+          "name": null,
+          "persons": {
+            "1": {
+              "plans": null,
+              "id": null,
+              "selectedPlan": null,
+              "customizableDelegate": null,
+              "locked": null,
+              "attributes": null
+            },
+            "2": {
+              "plans": null,
+              "id": null,
+              "selectedPlan": null,
+              "customizableDelegate": null,
+              "locked": null,
+              "attributes": null
+            }
+          },
+          "populationFactory": null,
+          "counter": 2,
+          "nextMsg": 4
+        },
+        "transitSchedule": {
+          "transitLines": {},
+          "stopFacilities": {},
+          "factory": {},
+          "attributes": {
+            "keys": null,
+            "values": null
+          },
+          "minimalTransferTimes": {
+            "minimalTransferTimes": {}
+          }
+        },
+        "households": {
+          "factory": {},
+          "households": {}
+        },
+        "vehicles": {
+          "vehicleTypes": {
+            "defaultVehicleType": {
+              "width": null,
+              "maxVelocity": null,
+              "length": null,
+              "pcuEquivalents": null,
+              "flowEfficiencyFactor": null,
+              "costInformation": null,
+              "capacity": null,
+              "id": null,
+              "engineInformation": null,
+              "description": null,
+              "networkMode": null,
+              "attributes": null
+            }
+          },
+          "vehicles": {
+            "1": {
+              "type": null,
+              "id": null,
+              "attributes": null
+            },
+            "2": {
+              "type": null,
+              "id": null,
+              "attributes": null
+            }
+          },
+          "builder": {},
+          "counter": {
+            "prefix": "[VehiclesImpl] added vehicle # ",
+            "suffix": "",
+            "multiplier": 2,
+            "counter": {
+              "value": null
+            },
+            "nextCounter": {
+              "value": null
+            }
+          }
+        }
+      },
+      "simTimer": {
+        "simStartTime": 21600.0,
+        "time": 21602.0,
+        "stepSize": 1.0
+      },
+      "state": "LEG",
+      "timeInterpretation": {
+        "activityDurationInterpretation": "tryEndTimeThenDuration",
+        "simulationStartTime": 0.0,
+        "onlyAdvance": false
+      }
+    },
+    "driverAgentDelegate": {
+      "basicPlanAgentDelegate": null,
+      "cachedNextLinkId": null
+    }
+  },
+  "passengers": [],
+  "id": {
+    "id": "2",
+    "index": 1
+  },
+  "currentLink": null,
+  "vehicle": {
+    "type": null,
+    "id": null,
+    "attributes": {
+      "keys": null,
+      "values": null
+    }
+  },
+  "passengerCapacity": 4
+}

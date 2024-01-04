@@ -1070,7 +1070,12 @@ final class QueueWithBuffer implements QLaneI, SignalizeableItem {
 	@Override
 	public double getLoadIndicator() {
 		return usedStorageCapacity;
-    }
+	}
+
+	@Override
+	public void setLoadIndicator(double usedStorageCapacity) {
+		this.usedStorageCapacity = usedStorageCapacity;
+	}
 
     static final class Builder implements LaneFactory {
         private final NetsimEngineContext context;

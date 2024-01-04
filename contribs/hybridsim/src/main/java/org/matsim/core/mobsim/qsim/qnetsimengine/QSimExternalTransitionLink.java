@@ -61,6 +61,11 @@ public class QSimExternalTransitionLink extends AbstractQLink {
 		return false;
 	}
 
+	@Override
+	public void setLoadIndicator(double usedStorageCapacity) {
+		throw new RuntimeException("not yet implemented");
+	}
+
 //	@Override
 //	void addFromUpstream(QVehicle veh) {
 //
@@ -129,6 +134,11 @@ public class QSimExternalTransitionLink extends AbstractQLink {
 		@Override
 		public double getLoadIndicator() {
 			return 0. ;
+		}
+
+		@Override
+		public void setLoadIndicator(double usedStorageCapacity) {
+			throw new RuntimeException("not implemented");
 		}
 //		@Override
 //		public void changeSpeedMetersPerSecond( double spd ) {

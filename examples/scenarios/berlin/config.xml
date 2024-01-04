@@ -25,6 +25,16 @@
 		<param name= "routingAlgorithmType" value="AStarLandmarks" />
 	</module>
 
+	<module name="qsim">
+		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
+		<param name="startTime" value="00:00:00" />
+		<param name="endTime" value="24:00:00" />
+		<param name="simStarttimeInterpretation" value="onlyUseStarttime" />
+		<param name="simEndtimeInterpretation" value="onlyUseEndtime" />
+
+		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing -->
+	</module>
+
 	<module name="planCalcScore">
 		<param name="learningRate" value="1.0" />
 		<param name="BrainExpBeta" value="2.0" />
@@ -98,7 +108,7 @@
 	<module name="parallelization">
 		<param name="serverIp" value="127.0.0.1" />
 		<param name="serverPort" value="8081" />
-		<param name="workerCount" value="5" />
+		<param name="workerCount" value="3" />
 		<param name="serverOnThisMachine" value="false" />
 	</module>
 </config>

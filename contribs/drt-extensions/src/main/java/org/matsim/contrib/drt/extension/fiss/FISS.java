@@ -26,6 +26,8 @@ import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.qsim.DefaultTeleportationEngine;
 import org.matsim.core.mobsim.qsim.InternalInterface;
 import org.matsim.core.mobsim.qsim.TeleportationEngine;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 import org.matsim.core.mobsim.qsim.interfaces.DepartureHandler;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimEngine;
 import org.matsim.core.mobsim.qsim.pt.TransitDriverAgent;
@@ -71,12 +73,19 @@ public class FISS implements DepartureHandler, MobsimEngine {
 	private final MatsimServices matsimServices;
 
 
-	FISS(MatsimServices matsimServices, QNetsimEngineI qNetsimEngine, Scenario scenario, EventsManager eventsManager, FISSConfigGroup fissConfigGroup,
-			TravelTime travelTime) {
+	FISS(MatsimServices matsimServices,
+		 QNetsimEngineI qNetsimEngine,
+		 Scenario scenario,
+		 EventsManager eventsManager,
+		 FISSConfigGroup fissConfigGroup,
+		 TravelTime travelTime,
+		 StepSynchronizationService stepSynchronizationService,
+		 MyWorkerId myWorkerId
+	) {
 		this.qNetsimEngine = qNetsimEngine;
         this.delegate = qNetsimEngine.getDepartureHandler();
 		this.fissConfigGroup = fissConfigGroup;
-		this.teleport = new DefaultTeleportationEngine(scenario, eventsManager);
+		this.teleport = new DefaultTeleportationEngine(scenario, eventsManager, stepSynchronizationService, myWorkerId);
 		this.travelTime = travelTime;
 		this.network = scenario.getNetwork();
 		this.random = MatsimRandom.getLocalInstance();

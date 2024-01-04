@@ -3,7 +3,9 @@ package org.matsim.core.mobsim.qsim.communication.model.messages;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.lang3.tuple.Triple;
 import org.matsim.core.mobsim.qsim.communication.model.MessagesTypeEnum;
+import org.matsim.core.mobsim.qsim.communication.model.matisim.SerializedBasicPlanAgentImpl;
 import org.matsim.core.mobsim.qsim.communication.model.matisim.SerializedQVehicle;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public class SyncStepMessage implements Message, Comparable<SyncStepMessage> {
 	int step;
 	private final List<SerializedQVehicle> vehicles;
 	private final Map<String, Double> usedSpaceIncomingLanes;
+
+	private final List<Triple<Double, SerializedBasicPlanAgentImpl, String/*Id<Link> */>> teleportedAgents;
 
 	@Override
 	public MessagesTypeEnum getMessageType() {

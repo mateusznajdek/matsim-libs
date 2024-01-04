@@ -440,6 +440,7 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 			if (mobsimEngine == this.withindayEngine) continue;
 
 			mobsimEngine.doSimStep(now);
+//			if (mo)
 
 			if (analyzeRunTimes)
 				this.mobsimEngineRunTimes.get(mobsimEngine).addAndGet(System.nanoTime() - this.startClockTime);
@@ -466,15 +467,8 @@ public final class QSim implements VisMobsim, Netsim, ActivityEndRescheduler {
 		if (doContinue) {
 			this.simTimer.incrementTime();
 			stepSynchronizationService.sendSyncMessageToNeighbours();
-			List<QVehicleImpl> receivedVehicles = stepSynchronizationService.getSyncMessages();
+			stepSynchronizationService.getSyncMessagesAndProcess(this.getNetsimNetwork(), this.teleportationEngine); // pass teleportation engine as param
 
-			receivedVehicles.forEach(vehicle -> {
-				QLinkI currentQueueLink = (QLinkI) this.getNetsimNetwork().getNetsimLinks().get(vehicle.getDriver().getCurrentLinkId());
-				QLaneI currentQueueLane = currentQueueLink.getAcceptingQLane();
-				if (currentQueueLane.isAcceptingFromUpstream()) {
-					currentQueueLane.addFromUpstream(vehicle);
-				}
-			});
 		} else {
 			log.info("LAST STEP");
 		}

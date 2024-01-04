@@ -40,6 +40,8 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.api.experimental.events.TeleportationArrivalEvent;
 import org.matsim.core.mobsim.framework.MobsimAgent;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.utils.collections.Tuple;
 import org.matsim.facilities.Facility;
@@ -74,16 +76,26 @@ public final class DefaultTeleportationEngine implements TeleportationEngine {
 	private EventsManager eventsManager;
 
 	private final boolean withTravelTimeCheck;
+	private StepSynchronizationService stepSynchronizationService;
+	private MyWorkerId myWorkerId;
 
 	@Inject
-	public DefaultTeleportationEngine(Scenario scenario, EventsManager eventsManager) {
-		this(scenario, eventsManager, scenario.getConfig().qsim().isUsingTravelTimeCheckInTeleportation());
+	public DefaultTeleportationEngine(Scenario scenario,
+									  EventsManager eventsManager,
+									  StepSynchronizationService stepSynchronizationService,
+									  MyWorkerId myWorkerId) {
+		this(scenario, eventsManager, scenario.getConfig().qsim().isUsingTravelTimeCheckInTeleportation(), stepSynchronizationService, myWorkerId);
 	}
 
-	public DefaultTeleportationEngine(Scenario scenario, EventsManager eventsManager, boolean withTravelTimeCheck) {
+	public DefaultTeleportationEngine(Scenario scenario,
+									  EventsManager eventsManager,
+									  boolean withTravelTimeCheck,
+									  StepSynchronizationService stepSynchronizationService,
+									  MyWorkerId myWorkerId) {
 		this.scenario = scenario;
 		this.eventsManager = eventsManager;
 		this.withTravelTimeCheck = withTravelTimeCheck;
+		this.stepSynchronizationService = stepSynchronizationService;
 	}
 
 	@Override
@@ -92,6 +104,13 @@ public final class DefaultTeleportationEngine implements TeleportationEngine {
 			LogManager.getLogger(this.getClass()).info("mode: " + agent.getMode());
 			throw new RuntimeException("teleportation does not work when travel time is undefined.  There is also really no magic fix for this,"
 					+ " since we cannot guess travel times for arbitrary modes and arbitrary landscapes.  kai/mz, apr'15 & feb'16") ;
+		}
+		// sending goes here, if link is not on our partition prepare agent for sending
+		Link destLink = this.scenario .getNetwork().getLinks().get(agent.getDestinationLinkId());
+//		throw new RuntimeException("This is just a test if anything is teleported here"); // TODO remove it and uncomment below
+		if (!destLink.getAttributes().getAttribute("partition").equals(Integer.valueOf(myWorkerId.get()))) {
+			stepSynchronizationService.addMosibAgentForTeleportation(now, agent, linkId);
+			return true;
 		}
 
 		double travelTime = agent.getExpectedTravelTime().seconds() ;
@@ -108,11 +127,11 @@ public final class DefaultTeleportationEngine implements TeleportationEngine {
 		// === below here is only visualization, no dynamics ===
 		Id<Person> agentId = agent.getId();
 		Link currLink = this.scenario .getNetwork().getLinks().get(linkId);
-		Link destLink = this.scenario .getNetwork().getLinks().get(agent.getDestinationLinkId());
 		Coord fromCoord = currLink.getToNode().getCoord();
 		Coord toCoord = destLink.getToNode().getCoord();
 		TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
 		this.teleportationData.put(agentId, agentInfo);
+
 
 		return true;
 	}

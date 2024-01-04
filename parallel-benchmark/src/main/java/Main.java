@@ -1,6 +1,5 @@
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
@@ -25,7 +24,7 @@ public class Main {
 			LOG.info("App started with single argument");
 			LOG.info("Argument: " + args[0]);
 			// 164880 - steps for berlin
-			config = ConfigUtils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("berlin"), "config.xml"));
+			config = ConfigUtils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("berlin5"), "config.xml"));
 			config.parallelization().setWorkerId(args[0]);
 		} else {
 			LOG.info("App started with more than 1 arguments");

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+
+<population>
+
+	<attributes>
+		<attribute name="coordinateReferenceSystem" class="java.lang.String">DHDN_GK4</attribute>
+	</attributes>
+
+	<!-- ====================================================================== -->
+
+	<person id="100012001">
+		<attributes>
+			<attribute name="home-activity-zone" class="java.lang.String">brandenburg</attribute>
+			<attribute name="income" class="java.lang.Double">2070.0</attribute>
+			<attribute name="subpopulation" class="java.lang.String">person</attribute>
+		</attributes>
+		<plan score="129.11303837200867" selected="yes">
+			<activity type="home_58800.0" link="12466" x="4628513.732908463" y="5831327.03865437" end_time="07:55:00" >
+				<attributes>
+					<attribute name="zoneId" class="java.lang.String">12064472</attribute>
+				</attributes>
+			</activity>
+			<leg mode="walk" dep_time="07:55:00" trav_time="00:23:00">
+				<attributes>
+					<attribute name="routingMode" class="java.lang.String">pt</attribute>
+				</attributes>
+				<route type="generic" start_link="12466" end_link="106959" trav_time="00:23:00" distance="1457.5384439731047"></route>
+			</leg>
+			<activity type="other_600.0" link="106959" x="4629522.400393091" y="5830837.506057661"> // TODO change x,y or delete them
+				<attributes>
+					<attribute name="cemdapStopDuration_s" class="java.lang.Integer">540</attribute>
+					<attribute name="zoneId" class="java.lang.String">12064472</attribute>
+				</attributes>
+			</activity>
+		</plan>
+
+	</person>
+
+<!-- ====================================================================== -->
+
+</population>

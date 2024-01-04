@@ -20,14 +20,10 @@
 
 package org.matsim.contrib.dvrp.passenger;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Queue;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.matsim.api.core.v01.Id;
@@ -39,21 +35,21 @@ import org.matsim.api.core.v01.population.Route;
 import org.matsim.contrib.dvrp.optimizer.Request;
 import org.matsim.contrib.dvrp.run.DvrpModes;
 import org.matsim.core.api.experimental.events.EventsManager;
-import org.matsim.core.mobsim.framework.MobsimAgent;
-import org.matsim.core.mobsim.framework.MobsimDriverAgent;
-import org.matsim.core.mobsim.framework.MobsimPassengerAgent;
-import org.matsim.core.mobsim.framework.MobsimTimer;
-import org.matsim.core.mobsim.framework.PlanAgent;
+import org.matsim.core.mobsim.framework.*;
 import org.matsim.core.mobsim.qsim.DefaultTeleportationEngine;
 import org.matsim.core.mobsim.qsim.InternalInterface;
 import org.matsim.core.mobsim.qsim.TeleportationEngine;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
+import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
+import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 import org.matsim.core.modal.ModalProviders;
 import org.matsim.vis.snapshotwriters.AgentSnapshotInfo;
 import org.matsim.vis.snapshotwriters.VisData;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Verify;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * @author Michal Maciejewski (michalm)
@@ -77,20 +73,21 @@ public class TeleportingPassengerEngine implements PassengerEngine, VisData {
 	private final InternalPassengerHandling internalPassengerHandling;
 	private final TeleportationEngine teleportationEngine;
 	private final Queue<Pair<Double, PassengerRequest>> teleportedRequests = new PriorityQueue<>(
-			Comparator.comparingDouble(Pair::getLeft));
+		Comparator.comparingDouble(Pair::getLeft));
 
 	private InternalInterface internalInterface;
 
 	TeleportingPassengerEngine(String mode, EventsManager eventsManager, MobsimTimer mobsimTimer,
-			PassengerRequestCreator requestCreator, TeleportedRouteCalculator teleportedRouteCalculator,
-			Network network, PassengerRequestValidator requestValidator, Scenario scenario) {
+							   PassengerRequestCreator requestCreator, TeleportedRouteCalculator teleportedRouteCalculator,
+							   Network network, PassengerRequestValidator requestValidator, Scenario scenario,
+							   StepSynchronizationService stepSynchronizationService, MyWorkerId myWorkerId) {
 		this(mode, eventsManager, mobsimTimer, requestCreator, teleportedRouteCalculator, network, requestValidator,
-				new DefaultTeleportationEngine(scenario, eventsManager, false));
+			new DefaultTeleportationEngine(scenario, eventsManager, false, stepSynchronizationService, myWorkerId));
 	}
 
 	TeleportingPassengerEngine(String mode, EventsManager eventsManager, MobsimTimer mobsimTimer,
-			PassengerRequestCreator requestCreator, TeleportedRouteCalculator teleportedRouteCalculator,
-			Network network, PassengerRequestValidator requestValidator, TeleportationEngine teleportationEngine) {
+							   PassengerRequestCreator requestCreator, TeleportedRouteCalculator teleportedRouteCalculator,
+							   Network network, PassengerRequestValidator requestValidator, TeleportationEngine teleportationEngine) {
 		this.mode = mode;
 		this.eventsManager = eventsManager;
 		this.mobsimTimer = mobsimTimer;
@@ -121,7 +118,7 @@ public class TeleportingPassengerEngine implements PassengerEngine, VisData {
 		while (!teleportedRequests.isEmpty() && teleportedRequests.peek().getLeft() <= time) {
 			PassengerRequest request = teleportedRequests.poll().getRight();
 			eventsManager.processEvent(
-					new PassengerDroppedOffEvent(time, mode, request.getId(), request.getPassengerId(), null));
+				new PassengerDroppedOffEvent(time, mode, request.getId(), request.getPassengerId(), null));
 		}
 
 		//then end teleported rides
@@ -139,11 +136,11 @@ public class TeleportingPassengerEngine implements PassengerEngine, VisData {
 			return false;
 		}
 
-		MobsimPassengerAgent passenger = (MobsimPassengerAgent)agent;
+		MobsimPassengerAgent passenger = (MobsimPassengerAgent) agent;
 		Id<Link> toLinkId = passenger.getDestinationLinkId();
-		Route route = ((Leg)((PlanAgent)passenger).getCurrentPlanElement()).getRoute();
+		Route route = ((Leg) ((PlanAgent) passenger).getCurrentPlanElement()).getRoute();
 		PassengerRequest request = requestCreator.createRequest(internalPassengerHandling.createRequestId(),
-				passenger.getId(), route, getLink(fromLinkId), getLink(toLinkId), now, now);
+			passenger.getId(), route, getLink(fromLinkId), getLink(toLinkId), now, now);
 
 		if (internalPassengerHandling.validateRequest(request, requestValidator, now)) {
 			Route teleportedRoute = adaptLegRouteForTeleportation(passenger, request, now);
@@ -163,7 +160,7 @@ public class TeleportingPassengerEngine implements PassengerEngine, VisData {
 	private Route adaptLegRouteForTeleportation(MobsimPassengerAgent passenger, PassengerRequest request, double now) {
 		Route teleportedRoute = teleportedRouteCalculator.calculateRoute(request);
 
-		Leg leg = (Leg)WithinDayAgentUtils.getCurrentPlanElement(passenger);//side effect: makes the plan modifiable
+		Leg leg = (Leg) WithinDayAgentUtils.getCurrentPlanElement(passenger);//side effect: makes the plan modifiable
 		Route originalRoute = leg.getRoute();
 		Verify.verify(originalRoute.getStartLinkId().equals(teleportedRoute.getStartLinkId()));
 		Verify.verify(originalRoute.getEndLinkId().equals(teleportedRoute.getEndLinkId()));
@@ -173,19 +170,19 @@ public class TeleportingPassengerEngine implements PassengerEngine, VisData {
 		leg.setRoute(teleportedRoute);
 
 		eventsManager.processEvent(new PassengerRequestScheduledEvent(mobsimTimer.getTimeOfDay(), mode, request.getId(),
-				request.getPassengerId(), null, now, now + teleportedRoute.getTravelTime().seconds()));
+			request.getPassengerId(), null, now, now + teleportedRoute.getTravelTime().seconds()));
 		return teleportedRoute;
 	}
 
 	private Link getLink(Id<Link> linkId) {
 		return Preconditions.checkNotNull(network.getLinks().get(linkId),
-				"Link id=%s does not exist in network for mode %s. Agent departs from a link that does not belong to that network?",
-				linkId, mode);
+			"Link id=%s does not exist in network for mode %s. Agent departs from a link that does not belong to that network?",
+			linkId, mode);
 	}
 
 	@Override
 	public boolean tryPickUpPassenger(PassengerPickupActivity pickupActivity, MobsimDriverAgent driver,
-			Id<Request> requestId, double now) {
+									  Id<Request> requestId, double now) {
 		throw new UnsupportedOperationException("No picking-up when teleporting");
 	}
 
@@ -210,12 +207,21 @@ public class TeleportingPassengerEngine implements PassengerEngine, VisData {
 			@Inject
 			private Scenario scenario;
 
+			@Inject
+			private StepSynchronizationService stepSynchronizationService;
+
+			@Inject
+			private MyWorkerId myWorkerId;
+
 			@Override
 			public TeleportingPassengerEngine get() {
 				return new TeleportingPassengerEngine(getMode(), eventsManager, mobsimTimer,
-						getModalInstance(PassengerRequestCreator.class),
-						getModalInstance(TeleportedRouteCalculator.class), getModalInstance(Network.class),
-						getModalInstance(PassengerRequestValidator.class), scenario);
+					getModalInstance(PassengerRequestCreator.class),
+					getModalInstance(TeleportedRouteCalculator.class), getModalInstance(Network.class),
+					getModalInstance(PassengerRequestValidator.class),
+					scenario,
+					stepSynchronizationService,
+					myWorkerId);
 			}
 		};
 	}

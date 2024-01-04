@@ -297,6 +297,11 @@ public final class QLinkLanesImpl extends AbstractQLink {
 		return this.isActive();
 	}
 
+	@Override
+	public void setLoadIndicator(double usedStorageCapacity) {
+		throw new RuntimeException("not implemented");
+	}
+
 	private boolean moveLanes(Collection<QVehicle> outGoingVehicles, MyWorkerId myWorkerId) {
 		boolean activeLane = false;
 		for (QLaneI lane : this.laneQueues.values()) {

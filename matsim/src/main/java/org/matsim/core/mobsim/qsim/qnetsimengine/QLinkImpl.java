@@ -172,6 +172,10 @@ public final class QLinkImpl extends AbstractQLink implements SignalizeableItem 
 		getWaitingList().clear();
 	}
 
+	public void setLoadIndicator(double usedStorageCapacity) {
+		qlane.setLoadIndicator(usedStorageCapacity);
+	}
+
 
 	/**
 	 * Move as many waiting cars to the link as it is possible

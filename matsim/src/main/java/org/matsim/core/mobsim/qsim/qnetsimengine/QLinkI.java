@@ -133,6 +133,9 @@ public interface QLinkI extends NetsimLink, TimeVariantLink {
 	 */
 	boolean doSimStep(Collection<QVehicle> outGoingVehicles, Map<Id<Link>, Double> usedSpaceIncomingLanes, MyWorkerId myWorkerId);
 
+
+	void setLoadIndicator(double usedStorageCapacity) ;
+
 	/**
 	 * Seems ok as public interface function. kai, aug'15
 	 */

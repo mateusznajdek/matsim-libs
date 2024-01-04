@@ -100,6 +100,8 @@ public interface QLaneI extends Identifiable<Lane> {
 	 */
 	double getLoadIndicator() ;
 
+	void setLoadIndicator(double usedStorageCapacity) ;
+
 	void initBeforeSimStep();
 	// yyyy could you please explain why this here was added.  Why can't the same thing be done at the beginning of "doSimStep"?  kai, nov'18
 

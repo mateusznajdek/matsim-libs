@@ -7,7 +7,6 @@ import org.matsim.core.config.groups.ParallelizationConfigGroup;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.communication.Subscriber;
 import org.matsim.core.mobsim.qsim.communication.model.MessagesTypeEnum;
-import org.matsim.core.mobsim.qsim.communication.model.WorkerId;
 import org.matsim.core.mobsim.qsim.communication.model.messages.CompletedInitializationMessage;
 import org.matsim.core.mobsim.qsim.communication.model.messages.Message;
 import org.matsim.core.mobsim.qsim.communication.model.messages.ServerInitializationMessage;
@@ -16,7 +15,6 @@ import org.matsim.core.mobsim.qsim.communication.service.worker.MessageReceiverS
 import org.matsim.core.mobsim.qsim.communication.service.worker.MessageSenderService;
 import org.matsim.core.mobsim.qsim.communication.service.worker.MyWorkerId;
 import org.matsim.core.mobsim.qsim.communication.service.worker.WorkerSubscriptionService;
-import org.matsim.core.mobsim.qsim.communication.service.worker.sync.NeighbourManager;
 import org.matsim.core.mobsim.qsim.communication.service.worker.sync.StepSynchronizationService;
 
 import java.io.IOException;

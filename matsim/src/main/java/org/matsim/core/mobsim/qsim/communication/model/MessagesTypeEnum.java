@@ -28,4 +28,5 @@ public enum MessagesTypeEnum {
 	FinishSimulationMessage,
 	ShutDownMessage,
 	SyncStepMessage,
+	TeleportationMessage,
 }
