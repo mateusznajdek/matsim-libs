@@ -24,7 +24,7 @@ public class Main {
 			LOG.info("App started with single argument");
 			LOG.info("Argument: " + args[0]);
 			// 164880 - steps for berlin
-			config = ConfigUtils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("berlin5"), "config.xml"));
+			config = ConfigUtils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("equil"), "config.xml"));
 			config.parallelization().setWorkerId(args[0]);
 		} else {
 			LOG.info("App started with more than 1 arguments");
@@ -35,8 +35,7 @@ public class Main {
 		config.controler().setLastIteration(0);
 
 		// possibly modify config here
-		String newOutputDirectory = config.controler().getOutputDirectory() + "/" + getCurrentTimeStamp() + "/"
-			+ config.parallelization().getWorkerId();
+		String newOutputDirectory = config.controler().getOutputDirectory() + "/" + getCurrentTimeStamp() + "/" + config.parallelization().getWorkerId();
 		config.controler().setOutputDirectory(newOutputDirectory);
 		LOG.info("Output directory changed to " + newOutputDirectory);
 		// ---
@@ -61,9 +60,8 @@ public class Main {
 	}
 
 	public static String getCurrentTimeStamp() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd;HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd--HH-mm");
 		Date now = new Date();
-		String strDate = sdf.format(now);
-		return strDate;
+        return sdf.format(now);
 	}
 }
