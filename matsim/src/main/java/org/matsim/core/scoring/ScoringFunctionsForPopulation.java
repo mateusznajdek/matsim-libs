@@ -49,7 +49,7 @@ import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.api.experimental.events.TeleportationArrivalEvent;
 import org.matsim.core.api.experimental.events.VehicleArrivesAtFacilityEvent;
 import org.matsim.core.config.Config;
-import org.matsim.core.config.groups.ControlerConfigGroup;
+import org.matsim.core.config.groups.ControllerConfigGroup;
 import org.matsim.core.controler.ControlerListenerManager;
 import org.matsim.core.controler.listener.BeforeMobsimListener;
 import org.matsim.core.controler.listener.IterationStartsListener;
@@ -95,11 +95,11 @@ import static org.matsim.core.router.TripStructureUtils.Trip;
 	@Inject
 	ScoringFunctionsForPopulation(ControlerListenerManager controlerListenerManager, EventsManager eventsManager, EventsToActivities eventsToActivities, EventsToLegs eventsToLegs,
 						 Population population, ScoringFunctionFactory scoringFunctionFactory, Config config) {
-		ControlerConfigGroup controlerConfigGroup = config.controler();
+		ControllerConfigGroup controllerConfigGroup = config.controller();
 
-		if (controlerConfigGroup.getEventTypeToCreateScoringFunctions() == ControlerConfigGroup.EventTypeToCreateScoringFunctions.IterationStarts) {
+		if (controllerConfigGroup.getEventTypeToCreateScoringFunctions() == ControllerConfigGroup.EventTypeToCreateScoringFunctions.IterationStarts) {
 			controlerListenerManager.addControlerListener((IterationStartsListener) event -> init());
-		} else if (controlerConfigGroup.getEventTypeToCreateScoringFunctions() == ControlerConfigGroup.EventTypeToCreateScoringFunctions.BeforeMobsim) {
+		} else if (controllerConfigGroup.getEventTypeToCreateScoringFunctions() == ControllerConfigGroup.EventTypeToCreateScoringFunctions.BeforeMobsim) {
 			controlerListenerManager.addControlerListener((BeforeMobsimListener) event -> init());
 		} else {
 			throw new RuntimeException("Unknown approach when to create the scoring functions for population. Aborting...");
