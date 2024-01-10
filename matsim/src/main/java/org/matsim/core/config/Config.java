@@ -35,27 +35,7 @@ import org.matsim.core.config.consistency.BeanValidationConfigConsistencyChecker
 import org.matsim.core.config.consistency.ConfigConsistencyChecker;
 import org.matsim.core.config.consistency.UnmaterializedConfigGroupChecker;
 import org.matsim.core.config.consistency.VspConfigConsistencyCheckerImpl;
-import org.matsim.core.config.groups.ChangeLegModeConfigGroup;
-import org.matsim.core.config.groups.ChangeModeConfigGroup;
-import org.matsim.core.config.groups.ControllerConfigGroup;
-import org.matsim.core.config.groups.CountsConfigGroup;
-import org.matsim.core.config.groups.EventsManagerConfigGroup;
-import org.matsim.core.config.groups.FacilitiesConfigGroup;
-import org.matsim.core.config.groups.GlobalConfigGroup;
-import org.matsim.core.config.groups.HouseholdsConfigGroup;
-import org.matsim.core.config.groups.LinkStatsConfigGroup;
-import org.matsim.core.config.groups.NetworkConfigGroup;
-import org.matsim.core.config.groups.PlanInheritanceConfigGroup;
-import org.matsim.core.config.groups.ReplanningConfigGroup;
-import org.matsim.core.config.groups.ScoringConfigGroup;
-import org.matsim.core.config.groups.RoutingConfigGroup;import org.matsim.core.config.groups.PlansConfigGroup;
-import org.matsim.core.config.groups.QSimConfigGroup;
-import org.matsim.core.config.groups.ScenarioConfigGroup;
-import org.matsim.core.config.groups.SubtourModeChoiceConfigGroup;
-import org.matsim.core.config.groups.TimeAllocationMutatorConfigGroup;
-import org.matsim.core.config.groups.TravelTimeCalculatorConfigGroup;
-import org.matsim.core.config.groups.VehiclesConfigGroup;
-import org.matsim.core.config.groups.VspExperimentalConfigGroup;
+import org.matsim.core.config.groups.*;
 import org.matsim.core.mobsim.hermes.HermesConfigGroup;
 import org.matsim.core.mobsim.jdeqsim.JDEQSimConfigGroup;
 import org.matsim.core.replanning.annealing.ReplanningAnnealerConfigGroup;
@@ -144,8 +124,6 @@ public final class Config implements MatsimExtensionPoint {
 		this.modules.put(RoutingConfigGroup.GROUP_NAME, new RoutingConfigGroup());
 
 		this.modules.put(ParallelizationConfigGroup.GROUP_NAME, new ParallelizationConfigGroup());
-
-		this.modules.put(PlansCalcRouteConfigGroup.GROUP_NAME, new PlansCalcRouteConfigGroup());
 
 		this.modules.put(TimeAllocationMutatorConfigGroup.GROUP_NAME, new TimeAllocationMutatorConfigGroup());
 

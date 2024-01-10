@@ -10,47 +10,6 @@
 	<artifactId>MATSIM-parallel-benchmark</artifactId>
 	<name>parallel-benchmark</name>
 
-	<repositories>
-		<repository>
-			<!-- Geotools is not on Maven central -->
-			<id>osgeo</id>
-			<name>Geotools repository</name>
-			<url>https://repo.osgeo.org/repository/release/</url>
-		</repository>
-
-		<repository>
-			<!-- For MATSim snapshots: -->
-			<id>matsim</id>
-			<url>https://repo.matsim.org/repository/matsim</url>
-		</repository>
-
-		<!-- network reader dependencies -->
-		<repository>
-			<id>topobyte</id>
-			<url>http://mvn.topobyte.de</url>
-		</repository>
-		<repository>
-			<id>slimjars</id>
-			<url>http://mvn.slimjars.com</url>
-		</repository>
-
-		<!-- stuff from github -->
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-
-		<repository>
-			<id>SBB</id>
-			<url>https://schweizerischebundesbahnen.bintray.com/simba.mvn</url>
-		</repository>
-
-		<repository>
-			<id>unidata-all</id>
-			<name>Unidata All</name>
-			<url>https://artifacts.unidata.ucar.edu/repository/unidata-all/</url>
-		</repository>
-	</repositories>
 	<dependencies>
 
 		<dependency>
@@ -64,11 +23,6 @@
 			<artifactId>matsim-examples</artifactId>
 			<version>16.0-SNAPSHOT</version>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.github.matsim-scenarios</groupId>
-			<artifactId>matsim-berlin</artifactId>
-			<version>5.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

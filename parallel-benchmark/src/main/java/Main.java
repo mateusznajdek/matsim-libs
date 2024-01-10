@@ -31,12 +31,12 @@ public class Main {
 			config = ConfigUtils.loadConfig(args);
 		}
 
-		config.controler().setOverwriteFileSetting(OverwriteFileSetting.deleteDirectoryIfExists);
-		config.controler().setLastIteration(0);
+		config.controller().setOverwriteFileSetting(OverwriteFileSetting.deleteDirectoryIfExists);
+		config.controller().setLastIteration(0);
 
 		// possibly modify config here
-		String newOutputDirectory = config.controler().getOutputDirectory() + "/" + getCurrentTimeStamp() + "/" + config.parallelization().getWorkerId();
-		config.controler().setOutputDirectory(newOutputDirectory);
+		String newOutputDirectory = config.controller().getOutputDirectory() + "/" + getCurrentTimeStamp() + "/" + config.parallelization().getWorkerId();
+		config.controller().setOutputDirectory(newOutputDirectory);
 		LOG.info("Output directory changed to " + newOutputDirectory);
 		// ---
 
