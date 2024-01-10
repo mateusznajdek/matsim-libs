@@ -57,6 +57,7 @@ public class Main {
 		// ---
 
 		controler.run();
+
 	}
 
 	public static String getCurrentTimeStamp() {
