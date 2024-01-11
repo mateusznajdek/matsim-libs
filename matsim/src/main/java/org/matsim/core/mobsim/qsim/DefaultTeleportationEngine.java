@@ -96,6 +96,7 @@ public final class DefaultTeleportationEngine implements TeleportationEngine {
 		this.eventsManager = eventsManager;
 		this.withTravelTimeCheck = withTravelTimeCheck;
 		this.stepSynchronizationService = stepSynchronizationService;
+		this.myWorkerId = myWorkerId;
 	}
 
 	@Override
